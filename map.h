@@ -129,6 +129,7 @@ private:
 	uint32_t m_MapNumPlayers;
 	uint32_t m_MapNumTeams;
 	vector<CGameSlot> m_Slots;
+	vector<uint32_t> m_FakePlayers				// fake players layout from config
 	string m_Conditions;						// win conditions, used for some stats processing
 	string m_GameName;
 	uint32_t m_StartPlayers;
