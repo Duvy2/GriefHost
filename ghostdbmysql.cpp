@@ -597,19 +597,6 @@ CCallableScoreCheck *CGHostDBMySQL :: ThreadedScoreCheck( string category, strin
 	return Callable;
 }
 
-CCallableLeagueCheck *CGHostDBMySQL :: ThreadedLeagueCheck( string category, string name, string server, string gamename )
-{
-	void *Connection = GetIdleConnection( );
-
-	if( !Connection )
-                ++m_NumConnections;
-
-	CCallableLeagueCheck *Callable = new CMySQLCallableLeagueCheck( category, name, server, gamename, Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port, this );
-	CreateThread( Callable );
-        ++m_OutstandingCallables;
-	return Callable;
-}
-
 CCallableGetTournament *CGHostDBMySQL :: ThreadedGetTournament( string gamename )
 {
 	void *Connection = GetIdleConnection( );
@@ -2291,114 +2278,6 @@ double *MySQLScoreCheck( void *conn, string *error, uint32_t botid, string categ
 	return Score;
 }
 
-uint32_t MySQLLeagueCheck( void *conn, string *error, uint32_t botid, string category, string name, string server, string gamename )
-{
-	transform( name.begin( ), name.end( ), name.begin( ), (int(*)(int))tolower );
-	string EscCategory = MySQLEscapeString( conn, category );
-	string EscName = MySQLEscapeString( conn, name );
-	string EscServer = MySQLEscapeString( conn, server );
-	string EscGameName = MySQLEscapeString( conn, gamename );
-	uint32_t SID = 255;
-	
-	if( gamename.empty( ) )
-	{
-		string Query = "SELECT k FROM league_status WHERE category='" + EscCategory + "' AND v='" + EscName + "'";
-
-		if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
-			*error = mysql_error( (MYSQL *)conn );
-		else
-		{
-			MYSQL_RES *Result = mysql_store_result( (MYSQL *)conn );
-
-			if( Result )
-			{
-				vector<string> Row = MySQLFetchRow( Result );
-
-				if( Row.size( ) == 1 )
-					SID = UTIL_ToUInt32( Row[0] );
-				/* else
-					*error = "error checking score [" + category + " : " + name + " : " + server + "] - row doesn't have 1 column"; */
-
-				mysql_free_result( Result );
-			}
-			else
-				*error = mysql_error( (MYSQL *)conn );
-		}
-	}
-	else
-	{
-		//tournament mode probably
-		//the match id for this game
-		string Query = "SELECT match_id FROM uxtourney_host WHERE gamename = '" + EscGameName + "'";
-		uint32_t MatchID = 0;
-
-		if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
-			*error = mysql_error( (MYSQL *)conn );
-		else
-		{
-			MYSQL_RES *Result = mysql_store_result( (MYSQL *)conn );
-
-			if( Result )
-			{
-				vector<string> Row = MySQLFetchRow( Result );
-
-				if( Row.size( ) == 1 )
-					MatchID = UTIL_ToUInt32( Row[0] );
-
-				mysql_free_result( Result );
-			}
-			else
-				*error = mysql_error( (MYSQL *)conn );
-		}
-		
-		//the user's id
-		Query = "SELECT uxtourney_users.id FROM validate LEFT JOIN uxtourney_users ON uxtourney_users.fuser = validate.fuser WHERE `key` = '' AND buser = '" + EscName + "' AND brealm = '" + EscServer + "'";
-		uint32_t UserID = 0;
-
-		if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
-			*error = mysql_error( (MYSQL *)conn );
-		else
-		{
-			MYSQL_RES *Result = mysql_store_result( (MYSQL *)conn );
-
-			if( Result )
-			{
-				vector<string> Row = MySQLFetchRow( Result );
-
-				if( Row.size( ) == 1 )
-					UserID = UTIL_ToUInt32( Row[0] );
-
-				mysql_free_result( Result );
-			}
-			else
-				*error = mysql_error( (MYSQL *)conn );
-		}
-		
-		Query = "SELECT order_id FROM uxtourney_matchplayers WHERE match_id = " + UTIL_ToString( MatchID ) + " AND (SELECT COUNT(*) FROM uxtourney_player_members WHERE user_id = " + UTIL_ToString( UserID ) + " AND player_id = uxtourney_matchplayers.player_id) > 0";
-
-		if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
-			*error = mysql_error( (MYSQL *)conn );
-		else
-		{
-			MYSQL_RES *Result = mysql_store_result( (MYSQL *)conn );
-
-			if( Result )
-			{
-				vector<string> Row = MySQLFetchRow( Result );
-
-				if( Row.size( ) == 1 )
-					SID = UTIL_ToUInt32( Row[0] );
-
-				mysql_free_result( Result );
-			}
-			else
-				*error = mysql_error( (MYSQL *)conn );
-		}
-	}
-
-	return SID;
-}
-
 vector<string> MySQLGetTournament( void *conn, string *error, uint32_t botid, string gamename )
 {
 	//[0]: match id
@@ -3060,16 +2939,6 @@ void CMySQLCallableScoreCheck :: operator( )( )
 
 	if( m_Error.empty( ) )
 		m_Result = MySQLScoreCheck( m_Connection, &m_Error, m_SQLBotID, m_Category, m_Name, m_Server );
-
-	Close( );
-}
-
-void CMySQLCallableLeagueCheck :: operator( )( )
-{
-	Init( );
-
-	if( m_Error.empty( ) )
-		m_Result = MySQLLeagueCheck( m_Connection, &m_Error, m_SQLBotID, m_Category, m_Name, m_Server, m_GameName );
 
 	Close( );
 }

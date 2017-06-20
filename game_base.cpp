@@ -205,9 +205,6 @@ CBaseGame :: ~CBaseGame( )
 	for( vector<CCallableScoreCheck *> :: iterator i = m_ScoreChecks.begin( ); i != m_ScoreChecks.end( ); ++i )
 		m_GHost->m_Callables.push_back( *i );
 
-	for( vector<CCallableLeagueCheck *> :: iterator i = m_LeagueChecks.begin( ); i != m_LeagueChecks.end( ); ++i )
-		m_GHost->m_Callables.push_back( *i );
-
 	lock.unlock( );
 
 	while( !m_Actions.empty( ) )
@@ -556,30 +553,6 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 			m_GHost->m_DB->RecoverCallable( *i );
 			delete *i;
 			i = m_ScoreChecks.erase( i );
-		}
-		else
-			++i;
-	}
-
-	for( vector<CCallableLeagueCheck *> :: iterator i = m_LeagueChecks.begin( ); i != m_LeagueChecks.end( ); )
-	{
-		if( (*i)->GetReady( ) )
-		{
-			double SID = (*i)->GetResult( ); //convert to double so we don't need another parameter
-			double *Array = new double[2];
-			Array[0] = SID;
-			Array[1] = 1000.0;
-
-			for( vector<CPotentialPlayer *> :: iterator j = m_Potentials.begin( ); j != m_Potentials.end( ); ++j )
-			{
-				if( (*j)->GetJoinPlayer( ) && (*j)->GetJoinPlayer( )->GetName( ) == (*i)->GetName( ) )
-					EventPlayerJoined( *j, (*j)->GetJoinPlayer( ), Array );
-			}
-
-			m_GHost->m_DB->RecoverCallable( *i );
-			delete *i;
-			delete [] Array;
-			i = m_LeagueChecks.erase( i );
 		}
 		else
 			++i;
@@ -2392,18 +2365,6 @@ CGamePlayer *CBaseGame :: EventPlayerJoined( CPotentialPlayer *potential, CIncom
 		// when the query is complete we will call EventPlayerJoined, but with a score
 
 		m_ScoreChecks.push_back( m_GHost->m_DB->ThreadedScoreCheck( m_Map->GetMapMatchMakingCategory( ), joinPlayer->GetName( ), JoinedRealm ) );
-		return NULL;
-	}
-	else if( m_League && score == NULL )
-	{
-		// league mode is enabled
-		// this just means that we take slots from MySQL database (score will store SID...)
-
-		if( m_Tournament )
-			m_LeagueChecks.push_back( m_GHost->m_DB->ThreadedLeagueCheck( m_Map->GetMapMatchMakingCategory( ), joinPlayer->GetName( ), JoinedRealm, m_GameName ) );
-		else
-			m_LeagueChecks.push_back( m_GHost->m_DB->ThreadedLeagueCheck( m_Map->GetMapMatchMakingCategory( ), joinPlayer->GetName( ), JoinedRealm, "" ) );
-
 		return NULL;
 	}
 

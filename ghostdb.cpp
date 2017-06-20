@@ -435,11 +435,6 @@ CCallableScoreCheck *CGHostDB :: ThreadedScoreCheck( string category, string nam
 	return NULL;
 }
 
-CCallableLeagueCheck *CGHostDB :: ThreadedLeagueCheck( string category, string name, string server, string gamename )
-{
-	return NULL;
-}
-
 CCallableGetTournament *CGHostDB :: ThreadedGetTournament( string gamename )
 {
 	return NULL;
@@ -664,11 +659,6 @@ CCallableDownloadAdd :: ~CCallableDownloadAdd( )
 CCallableScoreCheck :: ~CCallableScoreCheck( )
 {
 	delete m_Result;
-}
-
-CCallableLeagueCheck :: ~CCallableLeagueCheck( )
-{
-
 }
 
 CCallableGetTournament :: ~CCallableGetTournament( )

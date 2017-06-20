@@ -63,7 +63,6 @@ class CCallableSnipePlayerSummaryCheck;
 class CCallableW3MMDPlayerSummaryCheck;
 class CCallableDownloadAdd;
 class CCallableScoreCheck;
-class CCallableLeagueCheck;
 class CCallableGetTournament;
 class CCallableTournamentChat;
 class CCallableTournamentUpdate;
@@ -207,7 +206,6 @@ public:
 	virtual CCallableW3MMDPlayerSummaryCheck *ThreadedW3MMDPlayerSummaryCheck( string name, string realm, string category );
 	virtual CCallableDownloadAdd *ThreadedDownloadAdd( string map, uint32_t mapsize, string name, string ip, uint32_t spoofed, string spoofedrealm, uint32_t downloadtime );
 	virtual CCallableScoreCheck *ThreadedScoreCheck( string category, string name, string server );
-	virtual CCallableLeagueCheck *ThreadedLeagueCheck( string category, string name, string server, string gamename );
 	virtual CCallableGetTournament *ThreadedGetTournament( string gamename );
 	virtual CCallableTournamentChat *ThreadedTournamentChat( uint32_t chatid, string message );
 	virtual CCallableTournamentUpdate *ThreadedTournamentUpdate( uint32_t matchid, string gamename, uint32_t status );
@@ -857,24 +855,6 @@ public:
 	virtual string GetName( )					{ return m_Name; }
 	virtual double *GetResult( )					{ return m_Result; }
 	virtual void SetResult( double *nResult )	{ m_Result = nResult; }
-};
-
-class CCallableLeagueCheck : virtual public CBaseCallable
-{
-protected:
-	string m_Category;
-	string m_Name;
-	string m_Server;
-	string m_GameName;
-	uint32_t m_Result;
-
-public:
-	CCallableLeagueCheck( string nCategory, string nName, string nServer, string nGameName ) : CBaseCallable( ), m_Category( nCategory ), m_Name( nName ), m_Server( nServer ), m_GameName( nGameName ), m_Result( 255 ) { }
-	virtual ~CCallableLeagueCheck( );
-
-	virtual string GetName( )					{ return m_Name; }
-	virtual uint32_t GetResult( )				{ return m_Result; }
-	virtual void SetResult( uint32_t nResult )	{ m_Result = nResult; }
 };
 
 class CCallableGetTournament : virtual public CBaseCallable

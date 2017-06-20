@@ -47,7 +47,6 @@ class CIncomingAction;
 class CIncomingChatPlayer;
 class CIncomingMapSize;
 class CCallableScoreCheck;
-class CCallableLeagueCheck;
 class CCallableConnectCheck;
 class CCallableStreamGameUpdate;
 class CCallableStreamPlayerUpdate;
@@ -76,7 +75,6 @@ protected:
 	CGameProtocol *m_Protocol;						// game protocol
 	vector<CPotentialPlayer *> m_Potentials;		// vector of potential players (connections that haven't sent a W3GS_REQJOIN packet yet)
 	vector<CCallableScoreCheck *> m_ScoreChecks;
-	vector<CCallableLeagueCheck *> m_LeagueChecks;
 	vector<CCallableConnectCheck *> m_ConnectChecks;	// session validation for entconnect system
 	queue<CIncomingAction *> m_Actions;				// queue of actions to be sent
 	vector<string> m_Reserved;						// vector of player names with reserved slots (from the !hold command)
