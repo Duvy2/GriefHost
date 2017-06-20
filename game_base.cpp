@@ -51,7 +51,7 @@
 // CBaseGame
 //
 
-CBaseGame :: CBaseGame( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint16_t nHostPort, unsigned char nGameState, string nGameName, string nOwnerName, string nCreatorName, string nCreatorServer ) : m_GHost( nGHost ), m_SaveGame( nSaveGame ), m_Replay( NULL ), m_Exiting( false ), m_Saving( false ), m_HostPort( nHostPort ), m_GameState( nGameState ), m_VirtualHostPID( 255 ), m_GProxyEmptyActions( 0 ), m_GameName( nGameName ), m_LastGameName( nGameName ), m_VirtualHostName( m_GHost->m_VirtualHostName ), m_OwnerName( nOwnerName ), m_CreatorName( nCreatorName ), m_CreatorServer( nCreatorServer ), m_HCLCommandString( nMap->GetMapDefaultHCL( ) ), m_RandomSeed( GetTicks( ) ), m_HostCounter( m_GHost->m_HostCounter++ ), m_EntryKey( rand( ) ), m_Latency( m_GHost->m_Latency ), m_SyncLimit( m_GHost->m_SyncLimit ), m_SyncCounter( 0 ), m_GameTicks( 0 ), m_CreationTime( GetTime( ) ), m_LastPingTime( GetTime( ) ), m_LastRefreshTime( GetTime( ) ), m_LastDownloadTicks( GetTime( ) ), m_DownloadCounter( 0 ), m_LastDownloadCounterResetTicks( GetTime( ) ), m_LastAnnounceTime( 0 ), m_AnnounceInterval( 0 ), m_LastAutoStartTime( GetTime( ) ), m_AutoStartPlayers( 0 ), m_LastCountDownTicks( 0 ), m_CountDownCounter( 0 ), m_StartedLoadingTicks( 0 ), m_StartPlayers( 0 ), m_LastLagScreenResetTime( 0 ), m_LastActionSentTicks( 0 ), m_LastActionLateBy( 0 ), m_StartedLaggingTime( 0 ), m_LastLagScreenTime( 0 ), m_LastReservedSeen( GetTime( ) ), m_StartedKickVoteTime( 0 ), m_StartedVoteStartTime( 0 ), m_GameOverTime( 0 ), m_LastPlayerLeaveTicks( 0 ), m_MinimumScore( 0. ), m_MaximumScore( 0. ), m_SlotInfoChanged( false ), m_Locked( false ), m_RefreshMessages( m_GHost->m_RefreshMessages ), m_RefreshError( false ), m_RefreshRehosted( false ), m_MuteAll( false ), m_MuteLobby( false ), m_CountDownStarted( false ), m_GameLoading( false ), m_GameLoaded( false ), m_LoadInGame( nMap->GetMapLoadInGame( ) ), m_Lagging( false ), m_AutoSave( m_GHost->m_AutoSave ), m_MatchMaking( false ), m_MatchMakingBalance( true ), m_LocalAdminMessages( m_GHost->m_LocalAdminMessages ), m_DoDelete( 0 ), m_LastReconnectHandleTime( 0 ), m_League( false ), m_Tournament( false ), m_TournamentMatchID( 0 ), m_TournamentChatID( 0 ), m_TournamentRestrict( true ), m_SoftGameOver( false ), m_AutoHostPlayerCycle( 0 ), m_AllowDownloads( true ), m_Closed( false ), m_StreamPID( 255 ), m_StreamSID( 255 ), m_StreamPackets( NULL ), m_CachedMapSize( 0 ), m_LoadingTicksLimit( 0 ), m_RefreshErrorTicks( 0 ), m_StreamMapLayoutStyle( '\0' ), m_StreamMapNumPlayers( 0 ), m_LastStreamDBUpdateTime( 0 )
+CBaseGame :: CBaseGame( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint16_t nHostPort, unsigned char nGameState, string nGameName, string nOwnerName, string nCreatorName, string nCreatorServer ) : m_GHost( nGHost ), m_SaveGame( nSaveGame ), m_Replay( NULL ), m_Exiting( false ), m_Saving( false ), m_HostPort( nHostPort ), m_GameState( nGameState ), m_VirtualHostPID( 255 ), m_GProxyEmptyActions( 0 ), m_GameName( nGameName ), m_LastGameName( nGameName ), m_VirtualHostName( m_GHost->m_VirtualHostName ), m_OwnerName( nOwnerName ), m_CreatorName( nCreatorName ), m_CreatorServer( nCreatorServer ), m_HCLCommandString( nMap->GetMapDefaultHCL( ) ), m_RandomSeed( GetTicks( ) ), m_HostCounter( m_GHost->m_HostCounter++ ), m_EntryKey( rand( ) ), m_Latency( m_GHost->m_Latency ), m_SyncLimit( m_GHost->m_SyncLimit ), m_SyncCounter( 0 ), m_GameTicks( 0 ), m_CreationTime( GetTime( ) ), m_LastPingTime( GetTime( ) ), m_LastRefreshTime( GetTime( ) ), m_LastDownloadTicks( GetTime( ) ), m_DownloadCounter( 0 ), m_LastDownloadCounterResetTicks( GetTime( ) ), m_LastAnnounceTime( 0 ), m_AnnounceInterval( 0 ), m_LastAutoStartTime( GetTime( ) ), m_AutoStartPlayers( 0 ), m_LastCountDownTicks( 0 ), m_CountDownCounter( 0 ), m_StartedLoadingTicks( 0 ), m_StartPlayers( 0 ), m_LastLagScreenResetTime( 0 ), m_LastActionSentTicks( 0 ), m_LastActionLateBy( 0 ), m_StartedLaggingTime( 0 ), m_LastLagScreenTime( 0 ), m_LastReservedSeen( GetTime( ) ), m_StartedKickVoteTime( 0 ), m_StartedVoteStartTime( 0 ), m_GameOverTime( 0 ), m_LastPlayerLeaveTicks( 0 ), m_MinimumScore( 0. ), m_MaximumScore( 0. ), m_SlotInfoChanged( false ), m_Locked( false ), m_RefreshMessages( m_GHost->m_RefreshMessages ), m_RefreshError( false ), m_RefreshRehosted( false ), m_MuteAll( false ), m_MuteLobby( false ), m_CountDownStarted( false ), m_GameLoading( false ), m_GameLoaded( false ), m_LoadInGame( nMap->GetMapLoadInGame( ) ), m_Lagging( false ), m_AutoSave( m_GHost->m_AutoSave ), m_MatchMaking( false ), m_MatchMakingBalance( true ), m_LocalAdminMessages( m_GHost->m_LocalAdminMessages ), m_DoDelete( 0 ), m_LastReconnectHandleTime( 0 ), m_SoftGameOver( false ), m_AutoHostPlayerCycle( 0 ), m_AllowDownloads( true ), m_Closed( false ), m_StreamPID( 255 ), m_StreamSID( 255 ), m_StreamPackets( NULL ), m_CachedMapSize( 0 ), m_LoadingTicksLimit( 0 ), m_RefreshErrorTicks( 0 ), m_StreamMapLayoutStyle( '\0' ), m_StreamMapNumPlayers( 0 ), m_LastStreamDBUpdateTime( 0 )
 {
 	m_Socket = new CTCPServer( );
 	m_Protocol = new CGameProtocol( m_GHost );
@@ -61,9 +61,6 @@ CBaseGame :: CBaseGame( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint16
 
 	if( m_GHost->m_SaveReplays && !m_SaveGame )
 		m_Replay = new CReplay( );
-
-	if( m_Map->GetMapTournament( ) )
-		m_Tournament = true;
 
 	// wait time of 1 minute  = 0 empty actions required
 	// wait time of 2 minutes = 1 empty action required
@@ -1061,7 +1058,7 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 
 		for( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); ++i )
 		{
-			if( (*i)->GetReserved( ) || m_League )
+			if( (*i)->GetReserved( ) )
 				m_LastReservedSeen = GetTime( );
 		}
 
@@ -2425,89 +2422,6 @@ CGamePlayer *CBaseGame :: EventPlayerJoined( CPotentialPlayer *potential, CIncom
 
 		SID = EnforceSID;
 	}
-	else if( m_League )
-	{
-		uint32_t tmp = score[0];
-
-		if( m_Tournament )
-		{
-			if( tmp <= 12 )
-			{
-				vector<uint32_t> TournamentLayout = m_Map->GetTournamentLayout( );
-
-				if( tmp < TournamentLayout.size( ) )
-				{
-					//put this guy in the current slot on his specific team allocation
-					int start = TournamentLayout[tmp];
-					int end = m_Slots.size( );
-
-					if( tmp + 1 < TournamentLayout.size( ) )
-					{
-						end = TournamentLayout[tmp + 1];
-					}
-
-					CONSOLE_Print( "[GAME: " + m_GameName + "] attempting to assign to a slot on team " + UTIL_ToString( tmp ) + " from slot " + UTIL_ToString( start ) + " to " + UTIL_ToString( end ) );
-
-					for( unsigned char i = start; i < m_Slots.size( ) && i < end; ++i )
-					{
-						if( m_Slots[i].GetSlotStatus( ) == SLOTSTATUS_OPEN )
-						{
-							SID = i;
-							break;
-						}
-					}
-
-					if( SID == 255 )
-						SendAllChat( "Rejecting incoming user [" + joinPlayer->GetName( ) + "]: could not find slot (searched from " + UTIL_ToString( start ) + " to " + UTIL_ToString( end ) + ")." );
-				}
-				else
-					SendAllChat( "Rejecting incoming user [" + joinPlayer->GetName( ) + "]: team appears to be invalid (indicates configuration error)!" );
-			}
-			else if( AnyAdminCheck || !m_TournamentRestrict )
-			{
-				// search for empty observer slot
-				for( unsigned char i = 0; i < m_Slots.size( ); ++i )
-				{
-					if( m_Slots[i].GetSlotStatus( ) == SLOTSTATUS_OPEN && m_Slots[i].GetTeam( ) == 12 )
-					{
-						SID = i;
-						break;
-					}
-				}
-
-				if( SID == 255 )
-				{
-					// in this case just search for any empty
-					for( unsigned char i = 0; i < m_Slots.size( ); ++i )
-					{
-						if( m_Slots[i].GetSlotStatus( ) == SLOTSTATUS_OPEN )
-						{
-							SID = i;
-							break;
-						}
-					}
-				}
-			}
-			else
-				SendAllChat( "Rejecting incoming user [" + joinPlayer->GetName( ) + "]: not assigned to either team and not admin" );
-		}
-		else
-		{
-			if( tmp < m_Slots.size( ) )
-			{
-				SID = tmp;
-			}
-			else
-			{
-				// search for empty observer slot
-				for( unsigned char i = 10; i < m_Slots.size( ); ++i )
-				{
-					if( m_Slots[i].GetSlotStatus( ) == SLOTSTATUS_OPEN )
-						SID = i;
-				}
-			}
-		}
-	}
 	else
 	{
 		// try to find an empty slot
@@ -3179,22 +3093,16 @@ void CBaseGame :: EventPlayerChatToHost( CGamePlayer *player, CIncomingChatPlaye
 
 					CONSOLE_Print( "[GAME: " + m_GameName + "] (" + MinString + ":" + SecString + ") [All] [" + player->GetName( ) + "]: " + chatPlayer->GetMessage( ) );
 
-					// if tournament, also push to chat
-					if( m_Tournament && m_TournamentChatID != 0 )
-					{
-						boost::mutex::scoped_lock lock( m_GHost->m_CallablesMutex );
-						m_GHost->m_Callables.push_back( m_GHost->m_DB->ThreadedTournamentChat( m_TournamentChatID, player->GetName( ) + " (in-game): " + chatPlayer->GetMessage( ) ) );
-						lock.unlock( );
-					} else {
+					
 
-						ChatEvent ce;
-						ce.time = m_GameTicks;
-						ce.playername = player->GetName();
-						ce.playerColour1 = slot;
-						ce.chatmessage = chatPlayer->GetMessage();
-						ce.side = 2;						
-						m_GameChatEvents.push_back(ce);
-					}
+					ChatEvent ce;
+					ce.time = m_GameTicks;
+					ce.playername = player->GetName();
+					ce.playerColour1 = slot;
+					ce.chatmessage = chatPlayer->GetMessage();
+					ce.side = 2;						
+					m_GameChatEvents.push_back(ce);
+					
 
 					// don't relay ingame messages targeted for all players if we're currently muting all
 					// note that commands will still be processed even when muting all because we only stop relaying the messages, the rest of the function is unaffected
@@ -3245,21 +3153,15 @@ void CBaseGame :: EventPlayerChatToHost( CGamePlayer *player, CIncomingChatPlaye
 
 					CONSOLE_Print( "[GAME: " + m_GameName + "] [Lobby] [" + player->GetName( ) + "]: " + chatPlayer->GetMessage( ) );
 
-					// if tournament, also push to chat
-					if( m_Tournament && m_TournamentChatID != 0 )
-					{
-						boost::mutex::scoped_lock lock( m_GHost->m_CallablesMutex );
-						m_GHost->m_Callables.push_back( m_GHost->m_DB->ThreadedTournamentChat( m_TournamentChatID, player->GetName( ) + " (lobby): " + chatPlayer->GetMessage( ) ) );
-						lock.unlock( );
-					} else {
-                        ChatEvent ce;
-                        ce.time = (GetTime( ) - m_CreationTime) * 1000;
-                        ce.playername = player->GetName();
-                        ce.playerColour1 = slot;
-                        ce.chatmessage = chatPlayer->GetMessage();
-                        ce.side = fteam;
-                        m_LobbyChatEvents.push_back(ce);
-					}
+					
+					ChatEvent ce;
+					ce.time = (GetTime( ) - m_CreationTime) * 1000;
+					ce.playername = player->GetName();
+					ce.playerColour1 = slot;
+					ce.chatmessage = chatPlayer->GetMessage();
+					ce.side = fteam;
+					m_LobbyChatEvents.push_back(ce);
+					
 
 					if( m_MuteLobby )
                         Relay = false;
@@ -3350,27 +3252,8 @@ void CBaseGame :: EventPlayerChangeTeam( CGamePlayer *player, unsigned char team
 	if( m_SaveGame )
 		return;
 
-	if( m_League && !m_Tournament )
-		return;
-
 	if( m_Map->GetMapOptions( ) & MAPOPT_CUSTOMFORCES )
 	{
-		if( m_Tournament )
-		{
-			// if tournament, have to make sure target team is same as source team
-			unsigned char SID = GetSIDFromPID( player->GetPID( ) );
-
-			if( SID < m_Slots.size( ) )
-			{
-				if( m_Slots[SID].GetTeam( ) != team )
-					return;
-			}
-			else
-			{
-				CONSOLE_Print( "[GAME: " + m_GameName + "] Tournament problem: player has no slot while changing team?" );
-				return;
-			}
-		}
 
 		unsigned char oldSID = GetSIDFromPID( player->GetPID( ) );
 		unsigned char newSID = GetEmptySlot( team, player->GetPID( ) );
@@ -3927,14 +3810,6 @@ void CBaseGame :: EventGameStarted( )
 	}
 
 	lock.unlock( );
-
-	// if tournament, update tournament database status
-	if( m_Tournament && m_TournamentMatchID != 0 )
-	{
-		boost::mutex::scoped_lock lock( m_GHost->m_CallablesMutex );
-		m_GHost->m_Callables.push_back( m_GHost->m_DB->ThreadedTournamentUpdate( m_TournamentMatchID, m_GameName, 3 ) );
-		lock.unlock( );
-	}
 
 	if( !m_GHost->m_Stage )
 	{
@@ -5046,15 +4921,7 @@ void CBaseGame :: SaveGameData( )
 
 void CBaseGame :: CloseGame( )
 {
-	boost::mutex::scoped_lock lock( m_GHost->m_CallablesMutex );
 
-	// if tournament, update tournament database status
-	if( m_Tournament && m_TournamentMatchID != 0 )
-	{
-		m_GHost->m_Callables.push_back( m_GHost->m_DB->ThreadedTournamentUpdate( m_TournamentMatchID, m_GameName, 4 ) );
-	}
-
-	lock.unlock( );
 }
 
 void CBaseGame :: StartCountDown( bool force )

@@ -42,7 +42,6 @@ class CCallableBanCheck;
 class CCallableBanAdd;
 class CCallableBanRemove;
 class CCallableSpoofList;
-class CCallableReconUpdate;
 class CCallableCommandList;
 class CCallableAnnounceList;
 class CCallableGameAdd;
@@ -63,9 +62,6 @@ class CCallableSnipePlayerSummaryCheck;
 class CCallableW3MMDPlayerSummaryCheck;
 class CCallableDownloadAdd;
 class CCallableScoreCheck;
-class CCallableGetTournament;
-class CCallableTournamentChat;
-class CCallableTournamentUpdate;
 class CCallableAdminCommand;
 class CCallableConnectCheck;
 class CCallableW3MMDPlayerAdd;
@@ -185,7 +181,6 @@ public:
 	virtual CCallableBanRemove *ThreadedBanRemove( string server, string user, string context );
 	virtual CCallableBanRemove *ThreadedBanRemove( string user, string context );
 	virtual CCallableSpoofList *ThreadedSpoofList( );
-	virtual CCallableReconUpdate *ThreadedReconUpdate( uint32_t hostcounter, uint32_t seconds );
 	virtual CCallableCommandList *ThreadedCommandList( );
     virtual CCallableAnnounceList *ThreadedAnnounceList( );
 	virtual CCallableGameAdd *ThreadedGameAdd( string server, string map, string gamename, string ownername, uint32_t duration, uint32_t gamestate, string creatorname, string creatorserver, string savetype, vector<ChatEvent> lobbylog, vector<ChatEvent> gamelog );
@@ -206,9 +201,6 @@ public:
 	virtual CCallableW3MMDPlayerSummaryCheck *ThreadedW3MMDPlayerSummaryCheck( string name, string realm, string category );
 	virtual CCallableDownloadAdd *ThreadedDownloadAdd( string map, uint32_t mapsize, string name, string ip, uint32_t spoofed, string spoofedrealm, uint32_t downloadtime );
 	virtual CCallableScoreCheck *ThreadedScoreCheck( string category, string name, string server );
-	virtual CCallableGetTournament *ThreadedGetTournament( string gamename );
-	virtual CCallableTournamentChat *ThreadedTournamentChat( uint32_t chatid, string message );
-	virtual CCallableTournamentUpdate *ThreadedTournamentUpdate( uint32_t matchid, string gamename, uint32_t status );
 	virtual CCallableAdminCommand *ThreadedAdminCommand( string admin, string command, string description, string gamename );
 	virtual CCallableConnectCheck *ThreadedConnectCheck( string name, uint32_t sessionkey );
 	virtual CCallableW3MMDPlayerAdd *ThreadedW3MMDPlayerAdd( string category, uint32_t gameid, uint32_t pid, string name, string flag, uint32_t leaver, uint32_t practicing, string saveType );
@@ -482,17 +474,6 @@ public:
 
     virtual vector<string> GetResult( )				{ return m_Result; }
     virtual void SetResult( vector<string> nResult )	{ m_Result = nResult; }
-};
-
-class CCallableReconUpdate : virtual public CBaseCallable
-{
-protected:
-	uint32_t m_HostCounter;
-	uint32_t m_Seconds;
-
-public:
-	CCallableReconUpdate( uint32_t nHostCounter, uint32_t nSeconds ) : CBaseCallable( ), m_HostCounter( nHostCounter ), m_Seconds( nSeconds ) { }
-	virtual ~CCallableReconUpdate( );
 };
 
 class CCallableGameAdd : virtual public CBaseCallable
@@ -855,43 +836,6 @@ public:
 	virtual string GetName( )					{ return m_Name; }
 	virtual double *GetResult( )					{ return m_Result; }
 	virtual void SetResult( double *nResult )	{ m_Result = nResult; }
-};
-
-class CCallableGetTournament : virtual public CBaseCallable
-{
-protected:
-	string m_GameName;
-	vector<string> m_Result;
-
-public:
-	CCallableGetTournament( string nGameName ) : CBaseCallable( ), m_GameName( nGameName ) { }
-	virtual ~CCallableGetTournament( );
-
-	virtual vector<string> GetResult( )			{ return m_Result; }
-	virtual void SetResult( vector<string> nResult ) { m_Result = nResult; }
-};
-
-class CCallableTournamentChat : virtual public CBaseCallable
-{
-protected:
-	uint32_t m_ChatID;
-	string m_Message;
-
-public:
-	CCallableTournamentChat( uint32_t nChatID, string nMessage ) : CBaseCallable( ), m_ChatID( nChatID ), m_Message( nMessage ) { }
-	virtual ~CCallableTournamentChat( );
-};
-
-class CCallableTournamentUpdate : virtual public CBaseCallable
-{
-protected:
-	uint32_t m_MatchID;
-	string m_GameName;
-	uint32_t m_Status;
-
-public:
-	CCallableTournamentUpdate( uint32_t nMatchID, string nGameName, uint32_t nStatus ) : CBaseCallable( ), m_MatchID( nMatchID ), m_GameName( nGameName), m_Status( nStatus ) { }
-	virtual ~CCallableTournamentUpdate( );
 };
 
 class CCallableAdminCommand : virtual public CBaseCallable

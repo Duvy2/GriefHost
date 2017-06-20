@@ -330,11 +330,6 @@ CCallableSpoofList *CGHostDB :: ThreadedSpoofList( )
 	return NULL;
 }
 
-CCallableReconUpdate *CGHostDB :: ThreadedReconUpdate( uint32_t hostcounter, uint32_t seconds )
-{
-	return NULL;
-}
-
 CCallableCommandList *CGHostDB :: ThreadedCommandList( )
 {
 	return NULL;
@@ -431,21 +426,6 @@ CCallableDownloadAdd *CGHostDB :: ThreadedDownloadAdd( string map, uint32_t maps
 }
 
 CCallableScoreCheck *CGHostDB :: ThreadedScoreCheck( string category, string name, string server )
-{
-	return NULL;
-}
-
-CCallableGetTournament *CGHostDB :: ThreadedGetTournament( string gamename )
-{
-	return NULL;
-}
-
-CCallableTournamentChat *CGHostDB :: ThreadedTournamentChat( uint32_t chatid, string message )
-{
-	return NULL;
-}
-
-CCallableTournamentUpdate *CGHostDB :: ThreadedTournamentUpdate( uint32_t matchid, string gamename, uint32_t status )
 {
 	return NULL;
 }
@@ -555,11 +535,6 @@ CCallableSpoofList :: ~CCallableSpoofList( )
 	// don't delete anything in m_Result here, it's the caller's responsibility
 }
 
-CCallableReconUpdate :: ~CCallableReconUpdate( )
-{
-
-}
-
 CCallableCommandList :: ~CCallableCommandList( )
 {
 	// don't delete anything in m_Result here, it's the caller's responsibility
@@ -659,21 +634,6 @@ CCallableDownloadAdd :: ~CCallableDownloadAdd( )
 CCallableScoreCheck :: ~CCallableScoreCheck( )
 {
 	delete m_Result;
-}
-
-CCallableGetTournament :: ~CCallableGetTournament( )
-{
-
-}
-
-CCallableTournamentChat :: ~CCallableTournamentChat( )
-{
-
-}
-
-CCallableTournamentUpdate :: ~CCallableTournamentUpdate( )
-{
-
 }
 
 CCallableAdminCommand :: ~CCallableAdminCommand( )

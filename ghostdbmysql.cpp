@@ -311,19 +311,6 @@ CCallableSpoofList *CGHostDBMySQL :: ThreadedSpoofList( )
 	return Callable;
 }
 
-CCallableReconUpdate *CGHostDBMySQL :: ThreadedReconUpdate( uint32_t hostcounter, uint32_t seconds )
-{
-	void *Connection = GetIdleConnection( );
-
-	if( !Connection )
-		++m_NumConnections;
-
-	CCallableReconUpdate *Callable = new CMySQLCallableReconUpdate( hostcounter, seconds, Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port, this );
-	CreateThread( Callable );
-	++m_OutstandingCallables;
-	return Callable;
-}
-
 CCallableCommandList *CGHostDBMySQL :: ThreadedCommandList( )
 {
 	void *Connection = GetIdleConnection( );
@@ -592,45 +579,6 @@ CCallableScoreCheck *CGHostDBMySQL :: ThreadedScoreCheck( string category, strin
                 ++m_NumConnections;
 
 	CCallableScoreCheck *Callable = new CMySQLCallableScoreCheck( category, name, server, Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port, this );
-	CreateThread( Callable );
-        ++m_OutstandingCallables;
-	return Callable;
-}
-
-CCallableGetTournament *CGHostDBMySQL :: ThreadedGetTournament( string gamename )
-{
-	void *Connection = GetIdleConnection( );
-
-	if( !Connection )
-                ++m_NumConnections;
-
-	CCallableGetTournament *Callable = new CMySQLCallableGetTournament( gamename, Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port, this );
-	CreateThread( Callable );
-        ++m_OutstandingCallables;
-	return Callable;
-}
-
-CCallableTournamentChat *CGHostDBMySQL :: ThreadedTournamentChat( uint32_t chatid, string message )
-{
-	void *Connection = GetIdleConnection( );
-
-	if( !Connection )
-                ++m_NumConnections;
-
-	CCallableTournamentChat *Callable = new CMySQLCallableTournamentChat( chatid, message, Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port, this );
-	CreateThread( Callable );
-        ++m_OutstandingCallables;
-	return Callable;
-}
-
-CCallableTournamentUpdate *CGHostDBMySQL :: ThreadedTournamentUpdate( uint32_t matchid, string gamename, uint32_t status )
-{
-	void *Connection = GetIdleConnection( );
-
-	if( !Connection )
-                ++m_NumConnections;
-
-	CCallableTournamentUpdate *Callable = new CMySQLCallableTournamentUpdate( matchid, gamename, status, Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port, this );
 	CreateThread( Callable );
         ++m_OutstandingCallables;
 	return Callable;
@@ -1102,14 +1050,6 @@ map<string, string> MySQLSpoofList( void *conn, string *error, uint32_t botid )
 	}
 
 	return SpoofList;
-}
-
-void MySQLReconUpdate( void *conn, string *error, uint32_t botid, uint32_t hostcounter,  uint32_t seconds )
-{
-	string Query = "UPDATE uxrecon_bots SET time = DATE_ADD(NOW(), INTERVAL " + UTIL_ToString( seconds ) + " SECOND), status = 1 WHERE botid = " + UTIL_ToString( botid ) + " AND bnet = " + UTIL_ToString( hostcounter );
-
-	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
-		*error = mysql_error( (MYSQL *)conn );
 }
 
 vector<string> MySQLCommandList( void *conn, string *error, uint32_t botid )
@@ -2278,115 +2218,6 @@ double *MySQLScoreCheck( void *conn, string *error, uint32_t botid, string categ
 	return Score;
 }
 
-vector<string> MySQLGetTournament( void *conn, string *error, uint32_t botid, string gamename )
-{
-	//[0]: match id
-	//[1]: tournament id
-	//[2]: members per player
-	//[3]: chat id, if any
-	//[4]: number of players (teams)
-	vector<string> TournamentResult;
-	
-	string EscGameName = MySQLEscapeString( conn, gamename );
-	string Query = "SELECT match_id FROM uxtourney_host WHERE gamename = '" + EscGameName + "'";
-
-	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
-		*error = mysql_error( (MYSQL *)conn );
-	else
-	{
-		MYSQL_RES *Result = mysql_store_result( (MYSQL *)conn );
-
-		if( Result )
-		{
-			vector<string> Row = MySQLFetchRow( Result );
-
-			if( Row.size( ) == 1 )
-				TournamentResult.push_back( Row[0] );
-
-			mysql_free_result( Result );
-		}
-		else
-			*error = mysql_error( (MYSQL *)conn );
-	}
-	
-	if( !TournamentResult.empty( ) )
-	{
-		Query = "SELECT uxtourney_tournaments.id, uxtourney_tournaments.teamsize, uxtourney_matches.chat_id FROM uxtourney_matches LEFT JOIN uxtourney_tournaments ON uxtourney_tournaments.id = uxtourney_matches.tournament_id WHERE uxtourney_matches.id = '" + TournamentResult[0] + "'";
-
-		if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
-			*error = mysql_error( (MYSQL *)conn );
-		else
-		{
-			MYSQL_RES *Result = mysql_store_result( (MYSQL *)conn );
-
-			if( Result )
-			{
-				vector<string> Row = MySQLFetchRow( Result );
-
-				if( Row.size( ) == 3 )
-				{
-					TournamentResult.push_back( Row[0] );
-					TournamentResult.push_back( Row[1] );
-					TournamentResult.push_back( Row[2] );
-				}
-
-				mysql_free_result( Result );
-			}
-			else
-				*error = mysql_error( (MYSQL *)conn );
-		}
-	
-		Query = "SELECT COUNT(*) FROM uxtourney_matchplayers WHERE match_id = '" + TournamentResult[0] + "'";
-
-		if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
-			*error = mysql_error( (MYSQL *)conn );
-		else
-		{
-			MYSQL_RES *Result = mysql_store_result( (MYSQL *)conn );
-
-			if( Result )
-			{
-				vector<string> Row = MySQLFetchRow( Result );
-
-				if( Row.size( ) == 1 )
-					TournamentResult.push_back( Row[0] );
-
-				mysql_free_result( Result );
-			}
-			else
-				*error = mysql_error( (MYSQL *)conn );
-		}
-	}
-	
-	if( TournamentResult.size( ) < 5 )
-	{
-		CONSOLE_Print( "[MYSQL] Tournament retrieval failed, no data found (" + UTIL_ToString( TournamentResult.size( ) ) + ")" );
-		
-		while( TournamentResult.size( ) < 5 )
-			TournamentResult.push_back( "0" );
-	}
-
-	return TournamentResult;
-}
-
-void MySQLTournamentChat( void *conn, string *error, uint32_t botid, uint32_t chatid, string message )
-{
-	string EscMessage = MySQLEscapeString( conn, message );
-	string Query = "INSERT INTO uxtourney_chatlog (chat_id, message, time) VALUES ('" + UTIL_ToString( chatid ) + "', '" + EscMessage + "', UNIX_TIMESTAMP())";
-
-	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
-		*error = mysql_error( (MYSQL *)conn );
-}
-
-void MySQLTournamentUpdate( void *conn, string *error, uint32_t botid, uint32_t matchid, string gamename, uint32_t status )
-{
-	string EscGameName = MySQLEscapeString( conn, gamename );
-	string Query = "UPDATE uxtourney_host SET status = " + UTIL_ToString( status ) + " WHERE match_id = " + UTIL_ToString( matchid ) + " AND gamename = '" + EscGameName + "'";
-
-	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
-		*error = mysql_error( (MYSQL *)conn );
-}
-
 void MySQLAdminCommand( void *conn, string *error, uint32_t botid, string admin, string command, string description, string gamename )
 {
 	string EscAdmin = MySQLEscapeString( conn, admin );
@@ -2733,16 +2564,6 @@ void CMySQLCallableSpoofList :: operator( )( )
 	Close( );
 }
 
-void CMySQLCallableReconUpdate :: operator( )( )
-{
-	Init( );
-
-	if( m_Error.empty( ) )
-		MySQLReconUpdate( m_Connection, &m_Error, m_SQLBotID, m_HostCounter, m_Seconds );
-
-	Close( );
-}
-
 void CMySQLCallableCommandList :: operator( )( )
 {
 	Init( );
@@ -2939,36 +2760,6 @@ void CMySQLCallableScoreCheck :: operator( )( )
 
 	if( m_Error.empty( ) )
 		m_Result = MySQLScoreCheck( m_Connection, &m_Error, m_SQLBotID, m_Category, m_Name, m_Server );
-
-	Close( );
-}
-
-void CMySQLCallableGetTournament :: operator( )( )
-{
-	Init( );
-
-	if( m_Error.empty( ) )
-		m_Result = MySQLGetTournament( m_Connection, &m_Error, m_SQLBotID, m_GameName );
-
-	Close( );
-}
-
-void CMySQLCallableTournamentChat :: operator( )( )
-{
-	Init( );
-
-	if( m_Error.empty( ) )
-		MySQLTournamentChat( m_Connection, &m_Error, m_SQLBotID, m_ChatID, m_Message );
-
-	Close( );
-}
-
-void CMySQLCallableTournamentUpdate :: operator( )( )
-{
-	Init( );
-
-	if( m_Error.empty( ) )
-		MySQLTournamentUpdate( m_Connection, &m_Error, m_SQLBotID, m_MatchID, m_GameName, m_Status );
 
 	Close( );
 }

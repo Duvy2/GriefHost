@@ -161,11 +161,6 @@ protected:
     uint32_t m_DatabaseID;                          // the ID number from the database, which we'll use to save replay
 	int m_DoDelete;									// notifies thread to exit
 	uint32_t m_LastReconnectHandleTime;				// last time we tried to handle GProxy reconnects
-	bool m_League;									// whether or not this is a league game
-	bool m_Tournament;								// whether or not this is a uxtourney system game
-	uint32_t m_TournamentMatchID;					// if m_Tournament, this is the tournament match ID
-	uint32_t m_TournamentChatID;					// if m_Tournament, this is the chat id
-	bool m_TournamentRestrict;						// whether to restrict joiners based on tournament players table
 	uint32_t m_NumTeams;							// number of teams in this game, excluding observers
 	
 	unsigned char m_StreamSID;						// slot that streamer should go in

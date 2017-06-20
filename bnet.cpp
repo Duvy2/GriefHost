@@ -883,16 +883,10 @@ void CBNET :: ProcessPackets( )
 						CONSOLE_Print( "[BNET: " + m_ServerAlias + "] logon failed - ROC CD key in use by user [" + m_Protocol->GetKeyStateDescription( ) + "], disconnecting" );
 						m_CDKeyUseCount++;
 						
-						if( m_Protocol->GetKeyStateDescription( ) == "ur5949" )
-							UxReconnected( );
-						
 						break;
 					case CBNETProtocol :: KR_TFT_KEY_IN_USE:
 						CONSOLE_Print( "[BNET: " + m_ServerAlias + "] logon failed - TFT CD key in use by user [" + m_Protocol->GetKeyStateDescription( ) + "], disconnecting" );
 						m_CDKeyUseCount++;
-						
-						if( m_Protocol->GetKeyStateDescription( ) == "ur5949" )
-							UxReconnected( );
 						
 						break;
 					case CBNETProtocol :: KR_OLD_GAME_VERSION:
@@ -2365,13 +2359,6 @@ void CBNET :: BotCommand( string Message, string User, bool Whisper, bool ForceR
 	//asd
 	//if(User == m_PVPGNRealmName)
 	//m_GHost->m_CurrentGame;
-}
-
-void CBNET :: UxReconnected( )
-{
-	boost::mutex::scoped_lock lock( m_GHost->m_CallablesMutex );
-	m_GHost->m_Callables.push_back( m_GHost->m_DB->ThreadedReconUpdate( m_HostCounterID, GetReconnectTime( ) ) );
-	lock.unlock( );
 }
 
 void CBNET :: SendJoinChannel( string channel )
