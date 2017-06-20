@@ -1736,20 +1736,8 @@ CDBDotAPlayerSummary *MySQLDotAPlayerSummaryCheck( void *conn, string *error, ui
 	string EscName = MySQLEscapeString( conn, name );
 	string EscRealm = MySQLEscapeString( conn, realm );
 	
-	string table = "stats_dota_elo_scores";
-
-
-    if( saveType == "dota_solomm" )
-        table = "stats_dota_elo_scores_solomm";	
-	else if( saveType == "lod" )
-		table = "lod_elo_scores";
-	else if( saveType == "dota2" )
-		table = "dota2_elo_scores";
-	else if( saveType == "eihl" )
-		table = "eihl_elo_scores";
-	
 	CDBDotAPlayerSummary *DotAPlayerSummary = NULL;
-	string Query = "SELECT IFNULL(SUM(games), 0), IFNULL(SUM(kills), 0), IFNULL(SUM(deaths), 0), IFNULL(SUM(creepkills), 0), IFNULL(SUM(creepdenies), 0), IFNULL(SUM(assists), 0), IFNULL(SUM(neutralkills), 0), IFNULL(SUM(towerkills), 0), IFNULL(SUM(raxkills), 0), IFNULL(SUM(courierkills), 0), IFNULL(SUM(wins), 0), IFNULL(SUM(losses), 0), IFNULL(MAX(score), 0) FROM " + table + " WHERE name='" + EscName + "'";
+	string Query = "SELECT IFNULL(SUM(games), 0), IFNULL(SUM(kills), 0), IFNULL(SUM(deaths), 0), IFNULL(SUM(creepkills), 0), IFNULL(SUM(creepdenies), 0), IFNULL(SUM(assists), 0), IFNULL(SUM(neutralkills), 0), IFNULL(SUM(towerkills), 0), IFNULL(SUM(raxkills), 0), IFNULL(SUM(courierkills), 0), IFNULL(SUM(wins), 0), IFNULL(SUM(losses), 0), IFNULL(MAX(score), 0) FROM stats_dota_elo_scores WHERE name='" + EscName + "'";
 	
 	if( !realm.empty( ) )
 		Query += " AND server = '" + EscRealm + "'";
@@ -2125,53 +2113,16 @@ double *MySQLScoreCheck( void *conn, string *error, uint32_t botid, string categ
 
 	if( category == "dota" )
 	{
-		Query = "SELECT score FROM stats_dota_elo_scores WHERE name='" + EscName + "' AND server='" + EscServer + "' AND wins >= 5";
-		Query2 = "SELECT score FROM stats_dota_elo_scores WHERE name='" + EscName + "' AND server='" + EscServer + "' AND wins >= 5";
-	}
-	else if (category == "dota2" ) // dota2 checks normal DotA stats
-	{
-		Query = "SELECT dota_elo_scores.score FROM dota_elo_scores, gametrack WHERE dota_elo_scores.name='" + EscName + "' AND dota_elo_scores.server='" + EscServer + "' AND gametrack.name = dota_elo_scores.name AND gametrack.realm = dota_elo_scores.server AND dota_elo_scores.wins >= 20 AND ( (total_leftpercent / num_games)*100 > 90 OR (num_autoban / num_games)*100 < 5)";
-		Query2 = "SELECT -100000.0;";
-	}
-	else if( category == "castlefight2" ) // castlefight2 checks castlefight stats
-	{
-        Query = "SELECT score FROM  WHERE category='castlefight' AND name='" + EscName + "' AND server='" + EscServer + "' AND wins >= 15";
-        Query2 = "SELECT score FROM stats_w3mmd_elo_scores WHERE category='castlefight2' AND name='" + EscName + "' AND server='" + EscServer + "'";
-	}
-	else if( category == "legionmegaone2" ) // legionmegaone2 is really legionmegaone but with score restrictoin
-	{
-        Query = "SELECT score FROM stats_w3mmd_elo_scores WHERE category='legionmegaone' AND name='" + EscName + "' AND server='" + EscServer + "'";
-        Query2 = "SELECT score FROM stats_w3mmd_elo_scores WHERE category='legionmegaone' AND name='" + EscName + "' AND server='" + EscServer + "'";
-	}
-	
-	else if( category == "lod" )
-	{
-		Query = "SELECT score FROM lod_elo_scores WHERE name='" + EscName + "' AND server='" + EscServer + "' AND wins >= 10";
-		Query2 = "SELECT score FROM lod_elo_scores WHERE name='" + EscName + "' AND server='" + EscServer + "' AND wins >= 10";
-	}
-	else if( category == "legionmega" )
-	{
-        Query = "SELECT score FROM stats_w3mmd_elo_scores WHERE category='legionmega' AND name='" + EscName + "' AND server='" + EscServer + "' AND wins >= 5";
-        Query2 = "SELECT score FROM stats_w3mmd_elo_scores WHERE category='legionmega' AND name='" + EscName + "' AND server='" + EscServer + "' AND wins >= 5";
-	}
-	else if( category == "cfone" )
-	{
-        Query = "SELECT score FROM stats_w3mmd_elo_scores WHERE category='cfone' AND name='" + EscName + "' AND server='" + EscServer + "'";
-        Query2 = "SELECT score FROM stats_w3mmd_elo_scores WHERE category='cfone' AND name='" + EscName + "' AND server='" + EscServer + "'";
-	}
-	else if( category == "nwuih" )
-	{
-        Query = "SELECT score FROM stats_w3mmd_elo_scores WHERE category='nwuih' AND name='" + EscName + "' AND server='" + EscServer + "'";
-        Query2 = "SELECT score FROM stats_w3mmd_elo_scores WHERE category='nwuih' AND name='" + EscName + "' AND server='" + EscServer + "'";
-	}
-	else if( category == "battleships" )
-	{
-		Score[0] = 1000.0;
-        Query = "SELECT score FROM stats_w3mmd_elo_scores WHERE category='battleships' AND name='" + EscName + "' AND server='" + EscServer + "'";
-        Query2 = "SELECT score FROM stats_w3mmd_elo_scores WHERE category='battleships' AND name='" + EscName + "' AND server='" + EscServer + "'";
+		Query = "SELECT score FROM stats_dota_elo_scores WHERE name='" + EscName + "' AND server='" + EscServer + "'";
+		Query2 = "SELECT score FROM stats_dota_elo_scores WHERE name='" + EscName + "' AND server='" + EscServer + "'";
 	}
 	else
-		CONSOLE_Print( "[MYSQL] Requested score check on invalid category: " + category );
+	{
+		Query = "SELECT score FROM stats_w3mmd_elo_scores WHERE name='" + EscName + "' AND server='" + EscServer + "' AND category= '" + EscCategory + "'";
+		Query2 = "SELECT score FROM stats_w3mmd_elo_scores WHERE name='" + EscName + "' AND server='" + EscServer + "' AND category= '" + EscCategory + "'";
+	}
+	//else
+		//CONSOLE_Print( "[MYSQL] Requested score check on invalid category: " + category );
 
 	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
 		*error = mysql_error( (MYSQL *)conn );

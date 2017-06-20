@@ -74,17 +74,12 @@ public:
 CGame :: CGame( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint16_t nHostPort, unsigned char nGameState, string nGameName, string nOwnerName, string nCreatorName, string nCreatorServer ) : CBaseGame( nGHost, nMap, nSaveGame, nHostPort, nGameState, nGameName, nOwnerName, nCreatorName, nCreatorServer ), m_DBBanLast( NULL ), m_Stats( NULL ), m_CallableGameAdd( NULL ), m_ForfeitTime( 0 ), m_ForfeitTeam( 0 ), m_SetWinnerTicks( 0 ), m_SetWinnerTeam( 0 ), m_CallableGameUpdate( NULL ), m_GameUpdateID( 0 ), m_SoloTeam( false ), m_ForceBanTicks( 0 ), m_LastInvalidActionNotifyTime( 0 ), m_LastGameUpdateTime( 0 )
 {
     m_DBGame = new CDBGame( 0, string( ), m_Map->GetMapPath( ), string( ), string( ), string( ), 0 );
-    m_MapType = "";
+    m_MapType = m_Map->GetMapType( );
 
-	if( m_Map->GetMapType( ) == "w3mmd" )
-	{
-		m_Stats = new CStatsW3MMD( this, m_Map->GetMapStatsW3MMDCategory( ), "" );
-		m_MapType = m_Map->GetMapStatsW3MMDCategory( );
-	}
-	else if( m_Map->GetMapType( ) == "dota" )
+	// stats for dota
+	if( m_MapType == "dota" )
 	{
 		m_Stats = new CStatsDOTA( this, m_Map->GetConditions( ), "dota" );
-		m_MapType = "dota";
 		
         if(m_Map->GetMatchmaking()) {
             m_MatchMaking = true;
@@ -92,111 +87,18 @@ CGame :: CGame( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint16_t nHost
             m_MaximumScore = m_Map->GetMaximumScore();
             CONSOLE_Print("[GAME: " + m_GameName + "] created Matchmaking game from ["+UTIL_ToString(m_MinimumScore, 2)+"] to ["+UTIL_ToString(m_MaximumScore, 2)+"]");
 		}
-
 	}
-	else if( m_Map->GetMapType( ) == "dotaab" )
+	else
 	{
-		m_Stats = new CStatsDOTA( this, m_Map->GetConditions( ), "dota" );
-		m_MapType = "dotaab";
-		
-		// match making settings for autobalanced games
-		m_MatchMaking = true;
-		m_MinimumScore = 200;
-		m_MaximumScore = 99999;
+		// stats for any other maps
+		m_Stats = new CStatsW3MMD( this, m_MapType, "" );
 	}
-	else if( m_Map->GetMapType( ) == "lodab" )
-	{
-		m_Stats = new CStatsDOTA( this, m_Map->GetConditions( ), "lod" );
-		m_MapType = "lodab";
-		
-		// match making settings for autobalanced games
-		m_MatchMaking = true;
-		m_MinimumScore = 200;
-		m_MaximumScore = 99999;
-	}
-	else if( m_Map->GetMapType( ) == "lod" )
-	{
-		m_Stats = new CStatsDOTA( this, m_Map->GetConditions( ), "lod" );
-		m_MapType = "lod";
-	}
-	else if( m_Map->GetMapType( ) == "dota2" )
-	{
-		m_Stats = new CStatsDOTA( this, m_Map->GetConditions( ), "dota" );
-		m_MapType = "dota";
-		
-		// match making settings for tier 2
-		m_MatchMaking = true;
-		m_MatchMakingBalance = false;
-		m_MinimumScore = 500;
-		m_MaximumScore = 99999;
-	}
-	else if( m_Map->GetMapType( ) == "castlefight2" )
-	{
-		m_Stats = new CStatsW3MMD( this, "castlefight2", "" );
-		m_MapType = "castlefight2";
-		
-		// match making settings for tier 2
-		m_MatchMaking = true;
-		m_MinimumScore = 1150;
-		m_MaximumScore = 99999;
-	}
-	else if( m_Map->GetMapType( ) == "battleships" )
-	{
-		m_Stats = new CStatsW3MMD( this, "battleships", "" );
-		m_MapType = "battleships";
-		
-		// match making settings for tier 2
-		m_MatchMaking = true;
-		m_MinimumScore = 200;
-		m_MaximumScore = 99999;
-	}
-	else if( m_Map->GetMapType( ) == "legionmegaone2" )
-	{
-		m_Stats = new CStatsW3MMD( this, "legionmegaone", "" );
-		m_MapType = "legionmegaone2";
-		
-		// match making settings for tier 2
-		m_MatchMaking = true;
-		m_MinimumScore = 1200;
-		m_MaximumScore = 99999;
-	}
-	else if( m_Map->GetMapType( ) == "legionmega_ab" )
-	{
-		m_Stats = new CStatsW3MMD( this, "legionmega", "" );
-		m_MapType = "legionmega_ab";
-		
-		// match making settings for autobalanced games
-		m_MatchMaking = true;
-		m_MinimumScore = 200;
-		m_MaximumScore = 99999;
-	}
-	else if( m_Map->GetMapType( ) == "legionmega1100" )
-	{
-		m_Stats = new CStatsW3MMD( this, "legionmega", "" );
-		m_MapType = "legionmega";
-		
-		// match making settings for autobalanced games
-		m_MatchMaking = true;
-		m_MatchMakingBalance = false;
-		m_MinimumScore = 1100;
-		m_MaximumScore = 99999;
-	}
-	else if( m_Map->GetMapType( ) == "eihl" )
-	{
-		m_Stats = new CStatsDOTA( this, m_Map->GetConditions( ), "eihl" );
-		m_MapType = "eihl";
-	}
-	else if( m_Map->GetMapType( ) == "lihl" )
-	{
-		m_Stats = new CStatsW3MMD( this, "lihl", "" );
-		m_MapType = "lihl";
-	}
-	else if( m_Map->GetMapType( ) == "nwuih" )
-	{
-		m_Stats = new CStatsW3MMD( this, "nwuih", "" );
-		m_MapType = "nwuih";
-	}
+	//m_MatchMaking = true;
+	//m_MatchMakingBalance = false;
+	//m_MinimumScore = 1150;
+	//m_MaximumScore = 99999;
 	
+	// SoloTeam could be dynamic?!
 	if( m_MapType == "islanddefense" || m_MapType == "cfone" || m_MapType == "legionmegaone" || m_MapType == "legionmegaone2" )
 		m_SoloTeam = true;
 
@@ -971,58 +873,11 @@ CGamePlayer *CGame :: EventPlayerJoined( CPotentialPlayer *potential, CIncomingJ
 	// but if this is high ranked game, only show if they actually joined game
 	
 	if( Player && m_Map->GetMapPath( ).find( "DotA v" ) != string :: npos && ( m_MapType != "dota2" || score != NULL ) )
-	{
-		if( m_MapType == "lod" )
-			m_PairedDPSChecks.push_back( PairedDPSCheck( string( ), m_GHost->m_DB->ThreadedDotAPlayerSummaryCheck( Player->GetName( ), Player->GetJoinedRealm( ), "lod" ) ) );
-		else if( m_MapType == "dota2" )
-			m_PairedDPSChecks.push_back( PairedDPSCheck( string( ), m_GHost->m_DB->ThreadedDotAPlayerSummaryCheck( Player->GetName( ), Player->GetJoinedRealm( ), "dota2" ) ) );
-		else if( m_MapType == "eihl" )
-			m_PairedDPSChecks.push_back( PairedDPSCheck( string( ), m_GHost->m_DB->ThreadedDotAPlayerSummaryCheck( Player->GetName( ), Player->GetJoinedRealm( ), "eihl" ) ) );
-		else if( m_MapType == "dota_solomm" && score != NULL )
-			m_PairedDPSChecks.push_back( PairedDPSCheck( string( ), m_GHost->m_DB->ThreadedDotAPlayerSummaryCheck( Player->GetName( ), Player->GetJoinedRealm( ), "dota_solomm" ) ) );
-		else
-			m_PairedDPSChecks.push_back( PairedDPSCheck( string( ), m_GHost->m_DB->ThreadedDotAPlayerSummaryCheck( Player->GetName( ), Player->GetJoinedRealm( ), "dota" ) ) );
-	}
-	else if( Player && m_MapType == "castlefight2" && score != NULL )
-	{
-		m_PairedWPSChecks.push_back( PairedWPSCheck( string( ), m_GHost->m_DB->ThreadedW3MMDPlayerSummaryCheck( Player->GetName( ), Player->GetJoinedRealm( ), "castlefight2" ) ) );
-	}
-	else if( Player && m_MapType == "lihl" && score != NULL )
-	{
-		m_PairedWPSChecks.push_back( PairedWPSCheck( string( ), m_GHost->m_DB->ThreadedW3MMDPlayerSummaryCheck( Player->GetName( ), Player->GetJoinedRealm( ), "lihl" ) ) );
-	}
-	else if( Player && m_MapType == "castlefight" )
-	{
-		m_PairedWPSChecks.push_back( PairedWPSCheck( string( ), m_GHost->m_DB->ThreadedW3MMDPlayerSummaryCheck( Player->GetName( ), Player->GetJoinedRealm( ), "castlefight" ) ) );
-	}
-	else if( Player && m_MapType == "cfone" )
-	{
-		m_PairedWPSChecks.push_back( PairedWPSCheck( string( ), m_GHost->m_DB->ThreadedW3MMDPlayerSummaryCheck( Player->GetName( ), Player->GetJoinedRealm( ), "cfone" ) ) );
-	}
-	else if( Player && ( m_MapType == "legionmega" || m_MapType == "legionmega_ab" ) )
-	{
-		m_PairedWPSChecks.push_back( PairedWPSCheck( string( ), m_GHost->m_DB->ThreadedW3MMDPlayerSummaryCheck( Player->GetName( ), Player->GetJoinedRealm( ), "legionmega" ) ) );
-	}
-	else if( Player && m_MapType == "legionmega_nc" )
-	{
-		m_PairedWPSChecks.push_back( PairedWPSCheck( string( ), m_GHost->m_DB->ThreadedW3MMDPlayerSummaryCheck( Player->GetName( ), Player->GetJoinedRealm( ), "legionmega_nc" ) ) );
-	}
-	else if( Player && m_MapType == "legionmegaone" )
-	{
-		m_PairedWPSChecks.push_back( PairedWPSCheck( string( ), m_GHost->m_DB->ThreadedW3MMDPlayerSummaryCheck( Player->GetName( ), Player->GetJoinedRealm( ), "legionmegaone" ) ) );
-	}
-	else if( Player && m_MapType == "legionmegaone2" )
-	{
-		m_PairedWPSChecks.push_back( PairedWPSCheck( string( ), m_GHost->m_DB->ThreadedW3MMDPlayerSummaryCheck( Player->GetName( ), Player->GetJoinedRealm( ), "legionmegaone" ) ) );
-	}
-	else if( Player && m_MapType == "civwars" )
-	{
-		m_PairedWPSChecks.push_back( PairedWPSCheck( string( ), m_GHost->m_DB->ThreadedW3MMDPlayerSummaryCheck( Player->GetName( ), Player->GetJoinedRealm( ), "civwars" ) ) );
-	}
-	else if( Player && m_MapType == "battleships" )
-	{
-		m_PairedWPSChecks.push_back( PairedWPSCheck( string( ), m_GHost->m_DB->ThreadedW3MMDPlayerSummaryCheck( Player->GetName( ), Player->GetJoinedRealm( ), "battleships" ) ) );
-	}
+		m_PairedDPSChecks.push_back( PairedDPSCheck( string( ), m_GHost->m_DB->ThreadedDotAPlayerSummaryCheck( Player->GetName( ), Player->GetJoinedRealm( ), m_MapType ) ) );
+	
+	else
+		m_PairedWPSChecks.push_back( PairedWPSCheck( string( ), m_GHost->m_DB->ThreadedW3MMDPlayerSummaryCheck( Player->GetName( ), Player->GetJoinedRealm( ), m_MapType ) ) );
+	
 	
 	return Player;
 }
@@ -2962,82 +2817,6 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			m_PairedDPSChecks.push_back( PairedDPSCheck( string( ), m_GHost->m_DB->ThreadedDotAPlayerSummaryCheck( StatsUser, StatsRealm, "dota" ) ) );
 		else
 			m_PairedDPSChecks.push_back( PairedDPSCheck( User, m_GHost->m_DB->ThreadedDotAPlayerSummaryCheck( StatsUser, StatsRealm, "dota" ) ) );
-
-		player->SetStatsDotASentTime( GetTime( ) );
-	}
-
-	//
-	// !STATSDOTAHR
-	//
-
-	else if( ( Command == "statsdotahr" || Command == "sdhr" || Command == "statsdota2" || Command == "sd2" ) && GetTime( ) - player->GetStatsDotASentTime( ) >= 3 )
-	{
-		string StatsUser = User;
-
-		if( !Payload.empty( ) )
-			StatsUser = Payload;
-		
-		string StatsRealm = "";
-		GetStatsUser( &StatsUser, &StatsRealm );
-
-		if( player->GetSpoofed( ) && ( AdminCheck || RootAdminCheck || IsOwner( User ) ) )
-			m_PairedDPSChecks.push_back( PairedDPSCheck( string( ), m_GHost->m_DB->ThreadedDotAPlayerSummaryCheck( StatsUser, StatsRealm, "dota2" ) ) );
-		else
-			m_PairedDPSChecks.push_back( PairedDPSCheck( User, m_GHost->m_DB->ThreadedDotAPlayerSummaryCheck( StatsUser, StatsRealm, "dota2" ) ) );
-
-		player->SetStatsDotASentTime( GetTime( ) );
-	}
-
-	//
-	// !IHSTATS
-	//
-
-	else if( ( Command == "statsih" || Command == "ihstats" || Command == "ihs" ) && GetTime( ) - player->GetStatsDotASentTime( ) >= 3 )
-	{
-		string StatsUser = User;
-
-		if( !Payload.empty( ) )
-			StatsUser = Payload;
-		
-		string StatsRealm = "";
-		GetStatsUser( &StatsUser, &StatsRealm );
-
-		if( m_MapType == "lihl" )
-		{
-			if( player->GetSpoofed( ) && ( AdminCheck || RootAdminCheck || IsOwner( User ) ) )
-				m_PairedWPSChecks.push_back( PairedWPSCheck( string( ), m_GHost->m_DB->ThreadedW3MMDPlayerSummaryCheck( StatsUser, StatsRealm, "lihl" ) ) );
-			else
-				m_PairedWPSChecks.push_back( PairedWPSCheck( User, m_GHost->m_DB->ThreadedW3MMDPlayerSummaryCheck( StatsUser, StatsRealm, "lihl" ) ) );
-		}
-		else
-		{
-			if( player->GetSpoofed( ) && ( AdminCheck || RootAdminCheck || IsOwner( User ) ) )
-				m_PairedDPSChecks.push_back( PairedDPSCheck( string( ), m_GHost->m_DB->ThreadedDotAPlayerSummaryCheck( StatsUser, StatsRealm, "eihl" ) ) );
-			else
-				m_PairedDPSChecks.push_back( PairedDPSCheck( User, m_GHost->m_DB->ThreadedDotAPlayerSummaryCheck( StatsUser, StatsRealm, "eihl" ) ) );
-		}
-
-		player->SetStatsDotASentTime( GetTime( ) );
-	}
-
-	//
-	// !STATSLOD
-	//
-
-	else if( ( Command == "statslod" || Command == "sl" ) && GetTime( ) - player->GetStatsDotASentTime( ) >= 3 )
-	{
-		string StatsUser = User;
-
-		if( !Payload.empty( ) )
-			StatsUser = Payload;
-		
-		string StatsRealm = "";
-		GetStatsUser( &StatsUser, &StatsRealm );
-
-		if( player->GetSpoofed( ) && ( AdminCheck || RootAdminCheck || IsOwner( User ) ) )
-			m_PairedDPSChecks.push_back( PairedDPSCheck( string( ), m_GHost->m_DB->ThreadedDotAPlayerSummaryCheck( StatsUser, StatsRealm, "lod" ) ) );
-		else
-			m_PairedDPSChecks.push_back( PairedDPSCheck( User, m_GHost->m_DB->ThreadedDotAPlayerSummaryCheck( StatsUser, StatsRealm, "lod" ) ) );
 
 		player->SetStatsDotASentTime( GetTime( ) );
 	}
