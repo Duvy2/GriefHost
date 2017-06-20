@@ -71,7 +71,7 @@ public:
 // CGame
 //
 
-CGame :: CGame( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint16_t nHostPort, unsigned char nGameState, string nGameName, string nOwnerName, string nCreatorName, string nCreatorServer ) : CBaseGame( nGHost, nMap, nSaveGame, nHostPort, nGameState, nGameName, nOwnerName, nCreatorName, nCreatorServer ), m_DBBanLast( NULL ), m_Stats( NULL ), m_CallableGameAdd( NULL ), m_ForfeitTime( 0 ), m_ForfeitTeam( 0 ), m_CallableGetTournament( NULL ), m_SetWinnerTicks( 0 ), m_SetWinnerTeam( 0 ), m_CallableGameUpdate( NULL ), m_GameUpdateID( 0 ), m_SoloTeam( false ), m_ForceBanTicks( 0 ), m_LastInvalidActionNotifyTime( 0 ), m_LastGameUpdateTime( 0 )
+CGame :: CGame( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint16_t nHostPort, unsigned char nGameState, string nGameName, string nOwnerName, string nCreatorName, string nCreatorServer ) : CBaseGame( nGHost, nMap, nSaveGame, nHostPort, nGameState, nGameName, nOwnerName, nCreatorName, nCreatorServer ), m_DBBanLast( NULL ), m_Stats( NULL ), m_CallableGameAdd( NULL ), m_ForfeitTime( 0 ), m_ForfeitTeam( 0 ), m_SetWinnerTicks( 0 ), m_SetWinnerTeam( 0 ), m_CallableGameUpdate( NULL ), m_GameUpdateID( 0 ), m_SoloTeam( false ), m_ForceBanTicks( 0 ), m_LastInvalidActionNotifyTime( 0 ), m_LastGameUpdateTime( 0 )
 {
     m_DBGame = new CDBGame( 0, string( ), m_Map->GetMapPath( ), string( ), string( ), string( ), 0 );
     m_MapType = "";
