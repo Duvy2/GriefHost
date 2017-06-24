@@ -4,3 +4,11 @@ Bot.creator
 Bot.creator.user
 Bot.files
 Bot.includes
+mapcfgs/
+maps/
+Debug/
+default.cfg
+ghost.vcproj
+ghost.vcxproj
+ghost.vcxproj.filters
+ghost.rc
