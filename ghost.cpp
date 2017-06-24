@@ -1549,7 +1549,7 @@ bool CGHost :: Update( long usecBlock )
         map<string, uint32_t> map;
         for( vector<CBNET *> :: iterator i = m_BNETs.begin( ); i != m_BNETs.end( ); ++i )
         {
-            map.insert(pair<string, uint32_t>((*i)->GetServer( ), (*i)->GetConnected( )));
+            map.insert(pair<string, uint32_t>((*i)->GetServer( ), (*i)->GetLoggedIn( )));
         }
         m_CallableBotStatusUpdate = m_DB->ThreadedBotStatusUpdate( map );
         m_LastStatusUpdate = GetTime();
