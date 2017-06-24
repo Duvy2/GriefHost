@@ -727,6 +727,19 @@ CCallableVerifyUser *CGHostDBMySQL :: ThreadedVerifyUser( string name, string to
         return Callable;
 }
 
+CCallableBotStatusUpdate *CGHostDBMySQL :: ThreadedBotStatusUpdate(map<string, uint32_t> bnetStatus)
+{
+        void *Connection = GetIdleConnection( );
+
+        if( !Connection )
+                ++m_NumConnections;
+
+        CCallableBotStatusUpdate *Callable = new CMySQLCallableBotStatusUpdate(bnetStatus, Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port, this );
+        CreateThread( Callable );
+        ++m_OutstandingCallables;
+        return Callable;
+}
+
 void *CGHostDBMySQL :: GetIdleConnection( )
 {
 	boost::mutex::scoped_lock lock(m_DatabaseMutex);
@@ -2688,6 +2701,13 @@ uint32_t MySQLVerifyUser( void *conn, string *error, uint32_t botid, string name
 	return result;
 }
 
+bool MySQLBotStatusUpdate(void *conn, string *error, uint32_t botid, map<string, uint32_t> bnetStatus )
+{
+    uint32_t result = false;
+
+    return result;
+}
+
 //
 // MySQL Callables
 //
@@ -3157,6 +3177,16 @@ void CMySQLCallableVerifyUser  :: operator( )( )
 
         if( m_Error.empty( ) )
                 m_Result = MySQLVerifyUser( m_Connection, &m_Error, m_SQLBotID, m_Name, m_Token, m_Realm );
+
+        Close( );
+}
+
+void CMySQLCallableBotStatusUpdate  :: operator( )( )
+{
+        Init( );
+
+        if( m_Error.empty( ) )
+                m_Result = MySQLBotStatusUpdate(m_Connection, &m_Error, m_SQLBotID, m_BnetStatus );
 
         Close( );
 }

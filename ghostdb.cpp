@@ -265,6 +265,11 @@ uint32_t CGHostDB :: VerifyUser( string name, string token, string realm )
 	return 0;
 }
 
+uint32_t CGHostDB :: BotStatusUpdate( map<string, uint32_t> bnetStatus )
+{
+    return true;
+}
+
 void CGHostDB :: CreateThread( CBaseCallable *callable )
 {
 	callable->SetReady( true );
@@ -490,6 +495,11 @@ CCallableVerifyUser *CGHostDB :: ThreadedVerifyUser( string name, string token, 
 	return NULL;
 }
 
+CCallableBotStatusUpdate *CGHostDB :: ThreadedBotStatusUpdate( map<string, uint32_t> bnetStatus )
+{
+    return NULL;
+}
+
 //
 // Callables
 //
@@ -707,6 +717,11 @@ CCallableW3MMDVarAdd :: ~CCallableW3MMDVarAdd( )
 }
 
 CCallableVerifyUser :: ~CCallableVerifyUser( )
+{
+
+}
+
+CCallableBotStatusUpdate :: ~CCallableBotStatusUpdate( )
 {
 
 }

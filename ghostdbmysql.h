@@ -26,143 +26,6 @@
 #ifndef GHOSTDBMYSQL_H
 #define GHOSTDBMYSQL_H
 
-/**************
- *** SCHEMA ***
- **************
-
-CREATE TABLE admins (
-	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	botid INT NOT NULL,
-	name VARCHAR(15) NOT NULL,
-	server VARCHAR(100) NOT NULL
-)
-
-CREATE TABLE bans (
-	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	botid INT NOT NULL,
-	server VARCHAR(100) NOT NULL,
-	name VARCHAR(15) NOT NULL,
-	ip VARCHAR(15) NOT NULL,
-	date DATETIME NOT NULL,
-	gamename VARCHAR(31) NOT NULL,
-	admin VARCHAR(15) NOT NULL,
-	reason VARCHAR(255) NOT NULL
-)
-
-CREATE TABLE games (
-	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	botid INT NOT NULL,
-	server VARCHAR(100) NOT NULL,
-	map VARCHAR(100) NOT NULL,
-	datetime DATETIME NOT NULL,
-	gamename VARCHAR(31) NOT NULL,
-	ownername VARCHAR(15) NOT NULL,
-	duration INT NOT NULL,
-	gamestate INT NOT NULL,
-	creatorname VARCHAR(15) NOT NULL,
-	creatorserver VARCHAR(100) NOT NULL
-)
-
-CREATE TABLE gameplayers (
-	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	botid INT NOT NULL,
-	gameid INT NOT NULL,
-	name VARCHAR(15) NOT NULL,
-	ip VARCHAR(15) NOT NULL,
-	spoofed INT NOT NULL,
-	reserved INT NOT NULL,
-	loadingtime INT NOT NULL,
-	`left` INT NOT NULL,
-	leftreason VARCHAR(100) NOT NULL,
-	team INT NOT NULL,
-	colour INT NOT NULL,
-	spoofedrealm VARCHAR(100) NOT NULL,
-	INDEX( gameid )
-)
-
-CREATE TABLE dotagames (
-	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	botid INT NOT NULL,
-	gameid INT NOT NULL,
-	winner INT NOT NULL,
-	min INT NOT NULL,
-	sec INT NOT NULL
-)
-
-CREATE TABLE dotaplayers (
-	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	botid INT NOT NULL,
-	gameid INT NOT NULL,
-	colour INT NOT NULL,
-	kills INT NOT NULL,
-	deaths INT NOT NULL,
-	creepkills INT NOT NULL,
-	creepdenies INT NOT NULL,
-	assists INT NOT NULL,
-	gold INT NOT NULL,
-	neutralkills INT NOT NULL,
-	item1 CHAR(4) NOT NULL,
-	item2 CHAR(4) NOT NULL,
-	item3 CHAR(4) NOT NULL,
-	item4 CHAR(4) NOT NULL,
-	item5 CHAR(4) NOT NULL,
-	item6 CHAR(4) NOT NULL,
-	hero CHAR(4) NOT NULL,
-	newcolour INT NOT NULL,
-	towerkills INT NOT NULL,
-	raxkills INT NOT NULL,
-	courierkills INT NOT NULL,
-	INDEX( gameid, colour )
-)
-
-CREATE TABLE downloads (
-	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	botid INT NOT NULL,
-	map VARCHAR(100) NOT NULL,
-	mapsize INT NOT NULL,
-	datetime DATETIME NOT NULL,
-	name VARCHAR(15) NOT NULL,
-	ip VARCHAR(15) NOT NULL,
-	spoofed INT NOT NULL,
-	spoofedrealm VARCHAR(100) NOT NULL,
-	downloadtime INT NOT NULL
-)
-
-CREATE TABLE scores (
-	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	category VARCHAR(25) NOT NULL,
-	name VARCHAR(15) NOT NULL,
-	server VARCHAR(100) NOT NULL,
-	score REAL NOT NULL
-)
-
-CREATE TABLE w3mmdplayers (
-	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	botid INT NOT NULL,
-	category VARCHAR(25) NOT NULL,
-	gameid INT NOT NULL,
-	pid INT NOT NULL,
-	name VARCHAR(15) NOT NULL,
-	flag VARCHAR(32) NOT NULL,
-	leaver INT NOT NULL,
-	practicing INT NOT NULL
-)
-
-CREATE TABLE w3mmdvars (
-	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	botid INT NOT NULL,
-	gameid INT NOT NULL,
-	pid INT NOT NULL,
-	varname VARCHAR(25) NOT NULL,
-	value_int INT DEFAULT NULL,
-	value_real REAL DEFAULT NULL,
-	value_string VARCHAR(100) DEFAULT NULL
-)
-
- **************
- *** SCHEMA ***
- **************/
-
 //
 // CGHostDBMySQL
 //
@@ -236,6 +99,7 @@ public:
 	virtual CCallableW3MMDVarAdd *ThreadedW3MMDVarAdd( uint32_t gameid, map<VarP,double> var_reals, string saveType );
 	virtual CCallableW3MMDVarAdd *ThreadedW3MMDVarAdd( uint32_t gameid, map<VarP,string> var_strings, string saveType );
 	virtual CCallableVerifyUser *ThreadedVerifyUser( string name, string token, string realm );
+    virtual CCallableBotStatusUpdate *ThreadedBotStatusUpdate( map<string, uint32_t> bnetStatus );
 
 	// other database functions
 
@@ -290,6 +154,7 @@ bool MySQLW3MMDVarAdd( void *conn, string *error, uint32_t botid, uint32_t gamei
 bool MySQLW3MMDVarAdd( void *conn, string *error, uint32_t botid, uint32_t gameid, map<VarP,double> var_reals, string saveType );
 bool MySQLW3MMDVarAdd( void *conn, string *error, uint32_t botid, uint32_t gameid, map<VarP,string> var_strings, string saveType );
 uint32_t VerifyUser( void *conn, string *error, uint32_t botid, string name, string token, string realm );
+bool BotStatusUpdate( void *conn, string *error, uint32_t botid, map<string, uint32_t> bnetStatus );
 
 //
 // MySQL Callables
@@ -764,6 +629,17 @@ class CMySQLCallableVerifyUser : public CCallableVerifyUser, public CMySQLCallab
 public:
         CMySQLCallableVerifyUser( string nName, string nToken, string nRealm, void *nConnection, uint32_t nSQLBotID, string nSQLServer, string nSQLDatabase, string nSQLUser, string nSQLPassword, uint16_t nSQLPort, CGHostDBMySQL *nDB ) : CBaseCallable( ), CCallableVerifyUser( nName, nToken, nRealm), CMySQLCallable( nConnection, nSQLBotID, nSQLServer, nSQLDatabase, nSQLUser, nSQLPassword, nSQLPort, nDB ) { }
         virtual ~CMySQLCallableVerifyUser( ) { }
+
+        virtual void operator( )( );
+        virtual void Init( ) { CMySQLCallable :: Init( ); }
+        virtual void Close( ) { CMySQLCallable :: Close( ); }
+};
+
+class CMySQLCallableBotStatusUpdate : public CCallableBotStatusUpdate, public CMySQLCallable
+{
+public:
+        CMySQLCallableBotStatusUpdate( map<string, uint32_t> nBnetStatus, void *nConnection, uint32_t nSQLBotID, string nSQLServer, string nSQLDatabase, string nSQLUser, string nSQLPassword, uint16_t nSQLPort, CGHostDBMySQL *nDB ) : CBaseCallable( ), CCallableBotStatusUpdate( nBnetStatus ), CMySQLCallable( nConnection, nSQLBotID, nSQLServer, nSQLDatabase, nSQLUser, nSQLPassword, nSQLPort, nDB ) { }
+        virtual ~CMySQLCallableBotStatusUpdate( ) { }
 
         virtual void operator( )( );
         virtual void Init( ) { CMySQLCallable :: Init( ); }
