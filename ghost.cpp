@@ -444,6 +444,9 @@ CGHost :: CGHost( CConfig *CFG )
     m_CallableAnnounceList = NULL;
     m_LastAnnounceRefreshTime = 0;
     m_LastAnnounceTime = 0;
+
+    m_CallableBotStatusUpdate = NULL;
+    m_LastStatusUpdate = GetTime();
 	
 	CONSOLE_Print( "[GHOST] opening primary database" );
 
@@ -768,7 +771,6 @@ CGHost :: CGHost( CConfig *CFG )
 	m_FlameTriggers.push_back("faggot");
 	m_FlameTriggers.push_back("dick");
 	m_FlameTriggers.push_back("raizen");
-
 
 	CONSOLE_Print( "[GHOST] Loading GeoIP data" );
 	m_GeoIP = GeoIP_open( m_GeoIPFile.c_str( ), GEOIP_STANDARD | GEOIP_CHECK_CACHE );
@@ -1540,6 +1542,32 @@ bool CGHost :: Update( long usecBlock )
 		m_CallableCommandList = NULL;
 		m_LastCommandListTime = GetTime();
 	}
+
+    //refresh command list every 20 seconds
+    if( !m_CallableBotStatusUpdate && GetTime( ) - m_LastStatusUpdate >= 30 )
+    {
+        map<string, uint32_t> map;
+        for( vector<CBNET *> :: iterator i = m_BNETs.begin( ); i != m_BNETs.end( ); ++i )
+        {
+            map.insert(pair<string, uint32_t>((*i)->GetServer( ), (*i)->GetLoggedIn( )));
+        }
+        m_CallableBotStatusUpdate = m_DB->ThreadedBotStatusUpdate( map );
+        m_LastStatusUpdate = GetTime();
+    }
+
+    if( m_CallableBotStatusUpdate && m_CallableBotStatusUpdate->GetReady( ) )
+    {
+        bool success = m_CallableBotStatusUpdate->GetResult( );
+
+        if(success) {
+            CONSOLE_Print("[GHOST] Successfully updated status.");
+        }
+
+        m_DB->RecoverCallable( m_CallableBotStatusUpdate );
+        delete m_CallableBotStatusUpdate;
+        m_CallableBotStatusUpdate = NULL;
+        m_LastStatusUpdate = GetTime();
+    }
 
 	// refresh spoof list
 

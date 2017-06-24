@@ -67,6 +67,7 @@ class CCallableConnectCheck;
 class CCallableW3MMDPlayerAdd;
 class CCallableW3MMDVarAdd;
 class CCallableVerifyUser;
+class CCallableBotStatusUpdate;
 class CDBBan;
 class CDBGame;
 class CDBGamePlayer;
@@ -165,6 +166,7 @@ public:
 	virtual bool W3MMDVarAdd( uint32_t gameid, map<VarP,double> var_reals, string saveType );
 	virtual bool W3MMDVarAdd( uint32_t gameid, map<VarP,string> var_strings, string saveType );
 	virtual uint32_t VerifyUser(string name, string token, string realm);
+    virtual bool BotStatusUpdate(map<string, uint32_t> bnetStatus);
 
 	// threaded database functions
 
@@ -208,6 +210,7 @@ public:
 	virtual CCallableW3MMDVarAdd *ThreadedW3MMDVarAdd( uint32_t gameid, map<VarP,double> var_reals, string saveType );
 	virtual CCallableW3MMDVarAdd *ThreadedW3MMDVarAdd( uint32_t gameid, map<VarP,string> var_strings, string saveType );
 	virtual CCallableVerifyUser *ThreadedVerifyUser( string name, string token, string realm );
+    virtual CCallableBotStatusUpdate *ThreadedBotStatusUpdate( map<string, uint32_t> bnetStatus );
 };
 
 //
@@ -930,6 +933,20 @@ public:
 
 	virtual uint32_t GetResult( ) { return m_Result; }
 	virtual void SetResult( uint32_t nResult ) { m_Result = nResult; }
+};
+
+class CCallableBotStatusUpdate: virtual public CBaseCallable
+{
+protected:
+    map<string, uint32_t> m_BnetStatus;
+    bool m_Result;
+
+public:
+    CCallableBotStatusUpdate(map<string, uint32_t> nBnetStatus) : CBaseCallable( ), m_BnetStatus( nBnetStatus ), m_Result( false ) { }
+    virtual ~CCallableBotStatusUpdate( );
+
+    virtual bool GetResult( ) { return m_Result; }
+    virtual void SetResult( bool nResult ) { m_Result = nResult; }
 };
 
 //

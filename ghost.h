@@ -53,6 +53,7 @@ class CConfig;
 class CCallableCommandList;
 class CCallableSpoofList;
 class CCallableAnnounceList;
+class CCallableBotStatusUpdate;
 
 
 // fix error C2027 in Windows Visual Studio:
@@ -137,6 +138,8 @@ public:
 	uint32_t m_LastAutoHostTime;			// GetTime when the last auto host was attempted
 	uint32_t m_LastCommandListTime;			// GetTime when last refreshed command list
 	CCallableCommandList *m_CallableCommandList;			// threaded database command list in progress
+    CCallableBotStatusUpdate *m_CallableBotStatusUpdate;			// threaded database command list in progress
+    uint32_t m_LastStatusUpdate;
     bool m_AutoHostMatchMaking;
 	double m_AutoHostMinimumScore;
 	double m_AutoHostMaximumScore;
