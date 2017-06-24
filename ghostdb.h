@@ -220,7 +220,7 @@ public:
 	virtual CCallableW3MMDVarAdd *ThreadedW3MMDVarAdd( uint32_t gameid, map<VarP,double> var_reals, string saveType );
 	virtual CCallableW3MMDVarAdd *ThreadedW3MMDVarAdd( uint32_t gameid, map<VarP,string> var_strings, string saveType );
 	virtual CCallableVerifyUser *ThreadedVerifyUser( string name, string token, string realm );
-    virtual CCallableBotStatusUpdate *ThreadedBotStatusUpdate( map<string, uin32_t> bnetStatus );
+    virtual CCallableBotStatusUpdate *ThreadedBotStatusUpdate( map<string, uint32_t> bnetStatus );
 };
 
 //
@@ -1015,6 +1015,7 @@ class CCallableBotStatusUpdate: virtual public CBaseCallable
 {
 protected:
     map<string, uint32_t> m_BnetStatus;
+    bool m_Result;
 
 public:
     CCallableBotStatusUpdate(map<string, uint32_t> nBnetStatus) : CBaseCallable( ), m_BnetStatus( nBnetStatus ), m_Result( false ) { }
