@@ -51,7 +51,7 @@
 // CBaseGame
 //
 
-CBaseGame :: CBaseGame( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint16_t nHostPort, unsigned char nGameState, string nGameName, string nOwnerName, string nCreatorName, string nCreatorServer ) : m_GHost( nGHost ), m_SaveGame( nSaveGame ), m_Replay( NULL ), m_Exiting( false ), m_Saving( false ), m_HostPort( nHostPort ), m_GameState( nGameState ), m_VirtualHostPID( 255 ), m_GProxyEmptyActions( 0 ), m_GameName( nGameName ), m_LastGameName( nGameName ), m_VirtualHostName( m_GHost->m_VirtualHostName ), m_OwnerName( nOwnerName ), m_CreatorName( nCreatorName ), m_CreatorServer( nCreatorServer ), m_HCLCommandString( nMap->GetMapDefaultHCL( ) ), m_RandomSeed( GetTicks( ) ), m_HostCounter( m_GHost->m_HostCounter++ ), m_EntryKey( rand( ) ), m_Latency( m_GHost->m_Latency ), m_SyncLimit( m_GHost->m_SyncLimit ), m_SyncCounter( 0 ), m_GameTicks( 0 ), m_CreationTime( GetTime( ) ), m_LastPingTime( GetTime( ) ), m_LastRefreshTime( GetTime( ) ), m_LastDownloadTicks( GetTime( ) ), m_DownloadCounter( 0 ), m_LastDownloadCounterResetTicks( GetTime( ) ), m_LastAnnounceTime( 0 ), m_AnnounceInterval( 0 ), m_LastAutoStartTime( GetTime( ) ), m_AutoStartPlayers( 0 ), m_LastCountDownTicks( 0 ), m_CountDownCounter( 0 ), m_StartedLoadingTicks( 0 ), m_StartPlayers( 0 ), m_LastLagScreenResetTime( 0 ), m_LastActionSentTicks( 0 ), m_LastActionLateBy( 0 ), m_StartedLaggingTime( 0 ), m_LastLagScreenTime( 0 ), m_LastReservedSeen( GetTime( ) ), m_StartedKickVoteTime( 0 ), m_StartedVoteStartTime( 0 ), m_GameOverTime( 0 ), m_LastPlayerLeaveTicks( 0 ), m_MinimumScore( 0. ), m_MaximumScore( 0. ), m_SlotInfoChanged( false ), m_Locked( false ), m_RefreshMessages( m_GHost->m_RefreshMessages ), m_RefreshError( false ), m_RefreshRehosted( false ), m_MuteAll( false ), m_MuteLobby( false ), m_CountDownStarted( false ), m_GameLoading( false ), m_GameLoaded( false ), m_LoadInGame( nMap->GetMapLoadInGame( ) ), m_Lagging( false ), m_AutoSave( m_GHost->m_AutoSave ), m_MatchMaking( false ), m_MatchMakingBalance( true ), m_LocalAdminMessages( m_GHost->m_LocalAdminMessages ), m_DoDelete( 0 ), m_LastReconnectHandleTime( 0 ), m_SoftGameOver( false ), m_AutoHostPlayerCycle( 0 ), m_AllowDownloads( true ), m_Closed( false ), m_StreamPID( 255 ), m_StreamSID( 255 ), m_StreamPackets( NULL ), m_CachedMapSize( 0 ), m_LoadingTicksLimit( 0 ), m_RefreshErrorTicks( 0 ), m_StreamMapLayoutStyle( '\0' ), m_StreamMapNumPlayers( 0 ), m_LastStreamDBUpdateTime( 0 )
+CBaseGame :: CBaseGame( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint16_t nHostPort, unsigned char nGameState, string nGameName, string nOwnerName, string nCreatorName, string nCreatorServer ) : m_GHost( nGHost ), m_SaveGame( nSaveGame ), m_Replay( NULL ), m_Exiting( false ), m_Saving( false ), m_HostPort( nHostPort ), m_GameState( nGameState ), m_VirtualHostPID( 255 ), m_GProxyEmptyActions( 0 ), m_GameName( nGameName ), m_LastGameName( nGameName ), m_VirtualHostName( m_GHost->m_VirtualHostName ), m_OwnerName( nOwnerName ), m_CreatorName( nCreatorName ), m_CreatorServer( nCreatorServer ), m_HCLCommandString( nMap->GetMapDefaultHCL( ) ), m_RandomSeed( GetTicks( ) ), m_HostCounter( m_GHost->m_HostCounter++ ), m_EntryKey( rand( ) ), m_Latency( m_GHost->m_Latency ), m_SyncLimit( m_GHost->m_SyncLimit ), m_SyncCounter( 0 ), m_GameTicks( 0 ), m_CreationTime( GetTime( ) ), m_LastPingTime( GetTime( ) ), m_LastRefreshTime( GetTime( ) ), m_LastDownloadTicks( GetTime( ) ), m_DownloadCounter( 0 ), m_LastDownloadCounterResetTicks( GetTime( ) ), m_LastAnnounceTime( 0 ), m_AnnounceInterval( 0 ), m_LastAutoStartTime( GetTime( ) ), m_AutoStartPlayers( 0 ), m_LastCountDownTicks( 0 ), m_CountDownCounter( 0 ), m_StartedLoadingTicks( 0 ), m_StartPlayers( 0 ), m_LastLagScreenResetTime( 0 ), m_LastActionSentTicks( 0 ), m_LastActionLateBy( 0 ), m_StartedLaggingTime( 0 ), m_LastLagScreenTime( 0 ), m_LastReservedSeen( GetTime( ) ), m_StartedKickVoteTime( 0 ), m_StartedVoteStartTime( 0 ), m_GameOverTime( 0 ), m_LastPlayerLeaveTicks( 0 ), m_MinimumScore( 0. ), m_MaximumScore( 0. ), m_SlotInfoChanged( false ), m_Locked( false ), m_RefreshMessages( m_GHost->m_RefreshMessages ), m_RefreshError( false ), m_RefreshRehosted( false ), m_MuteAll( false ), m_MuteLobby( false ), m_CountDownStarted( false ), m_GameLoading( false ), m_GameLoaded( false ), m_LoadInGame( nMap->GetMapLoadInGame( ) ), m_Lagging( false ), m_AutoSave( m_GHost->m_AutoSave ), m_MatchMaking( false ), m_MatchMakingBalance( true ), m_LocalAdminMessages( m_GHost->m_LocalAdminMessages ), m_DoDelete( 0 ), m_LastReconnectHandleTime( 0 ), m_SoftGameOver( false ), m_AutoHostPlayerCycle( 0 ), m_AllowDownloads( true ), m_Closed( false ), m_StreamPID( 255 ), m_StreamSID( 255 ), m_StreamPackets( NULL ), m_CachedMapSize( 0 ), m_LoadingTicksLimit( 0 ), m_RefreshErrorTicks( 0 ), m_StreamMapLayoutStyle( '\0' ), m_StreamMapNumPlayers( 0 )
 {
 	m_Socket = new CTCPServer( );
 	m_Protocol = new CGameProtocol( m_GHost );
@@ -195,9 +195,6 @@ CBaseGame :: ~CBaseGame( )
 		delete *i;
 
 	boost::mutex::scoped_lock lock( m_GHost->m_CallablesMutex );
-
-	for( vector<CCallableConnectCheck *> :: iterator i = m_ConnectChecks.begin( ); i != m_ConnectChecks.end( ); ++i )
-		m_GHost->m_Callables.push_back( *i );
 
 	for( vector<CCallableScoreCheck *> :: iterator i = m_ScoreChecks.begin( ); i != m_ScoreChecks.end( ); ++i )
 		m_GHost->m_Callables.push_back( *i );
@@ -550,39 +547,6 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 			m_GHost->m_DB->RecoverCallable( *i );
 			delete *i;
 			i = m_ScoreChecks.erase( i );
-		}
-		else
-			++i;
-	}
-
-	for( vector<CCallableConnectCheck *> :: iterator i = m_ConnectChecks.begin( ); i != m_ConnectChecks.end( ); )
-	{
-		if( (*i)->GetReady( ) )
-		{
-			bool Check = (*i)->GetResult( );
-
-			for( vector<CGamePlayer *> :: iterator j = m_Players.begin( ); j != m_Players.end( ); ++j )
-			{
-				if( (*j)->GetName( ) == (*i)->GetName( ) )
-				{
-					if( Check )
-						AddToSpoofed( "entconnect", (*i)->GetName( ), false );
-					else
-					{
-						(*j)->SetDeleteMe( true );
-						(*j)->SetLeftReason( "invalid session" );
-						(*j)->SetLeftCode( PLAYERLEAVE_LOBBY );
-						m_GHost->DenyIP( (*j)->GetExternalIPString( ), 20000, "kicked for invalid session" );
-						OpenSlot( GetSIDFromPID( (*j)->GetPID( ) ), false );
-					}
-
-					break;
-				}
-			}
-
-			m_GHost->m_DB->RecoverCallable( *i );
-			delete *i;
-			i = m_ConnectChecks.erase( i );
 		}
 		else
 			++i;
@@ -984,25 +948,6 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 		}
 
 		lock.unlock( );
-	}
-
-	// update stream DB
-
-	if( m_GHost->m_Stream && GetTime( ) - m_LastStreamDBUpdateTime > 30 && m_StreamPackets )
-	{
-		boost::mutex::scoped_lock lock( m_GHost->m_CallablesMutex );
-
-		if( m_Map )
-			m_GHost->m_Callables.push_back( m_GHost->m_DB->ThreadedStreamGameUpdate( m_GameName, m_Map->GetMapPath( ), UTIL_ByteArrayToUInt32( m_Map->GetMapCRC( ), false ), UTIL_ByteArrayToUInt32( m_Map->GetMapGameFlags( ), false ), m_GHost->m_StreamPort ) );
-		else
-			m_GHost->m_Callables.push_back( m_GHost->m_DB->ThreadedStreamGameUpdate( m_GameName, "", 0, 0, m_GHost->m_StreamPort ) );
-
-		for( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); ++i )
-			m_GHost->m_Callables.push_back( m_GHost->m_DB->ThreadedStreamPlayerUpdate( (*i)->GetName( ), m_GameName ) );
-
-		lock.unlock( );
-
-		m_LastStreamDBUpdateTime = GetTime( );
 	}
 
 	// kick players who don't spoof check within 30 seconds when spoof checks are required and the game is autohosted
@@ -2324,13 +2269,6 @@ CGamePlayer *CBaseGame :: EventPlayerJoined( CPotentialPlayer *potential, CIncom
 	// note: this is not a replacement for spoof checking since it doesn't verify the player's name and it can be spoofed anyway
 
 	string JoinedRealm = GetJoinedRealm( joinPlayer->GetHostCounter( ) );
-
-	if( JoinedRealm == "entconnect" )
-	{
-		// to spoof this user, we will validate their entry key with our copy in database
-		CONSOLE_Print( "[GAME: " + m_GameName + "] player [" + joinPlayer->GetName( ) + "|" + potential->GetExternalIPString( ) + "] joining from EntConnect; skey=" + UTIL_ToString( joinPlayer->GetEntryKey( ) ) );
-		m_ConnectChecks.push_back( m_GHost->m_DB->ThreadedConnectCheck( joinPlayer->GetName( ), joinPlayer->GetEntryKey( ) ) );
-	}
 
 	if( JoinedRealm.empty( ) )
 	{

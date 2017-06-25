@@ -42,7 +42,7 @@
 // CStagePlayer
 //
 
-CStagePlayer :: CStagePlayer( CGameProtocol *nProtocol, CTCPSocket *nSocket, CGHost *nGHost ) : m_Protocol( nProtocol ), m_Socket( nSocket ), m_GHost( nGHost ), m_ConnectCheck( NULL ), m_Checked( false ), m_DeleteMe( false ), m_ConnectionTicks( GetTicks( ) ), m_LoadingStage( 0 ), m_LastStageTicks( GetTicks( ) ), m_MapOK( false ), m_LastPingTime( GetTime( ) ), m_Score( -10000.0 ), m_JoinTicks( 0 ), m_SpoofSent( false ), m_ScoreRange( 100.0 ), m_LastScoreRangeIncrease( GetTime( ) ), m_ScoreCheck( NULL ), m_MuteTicks( 0 ), m_VirtualPID( 1 ), m_ChatPID( 2 )
+CStagePlayer :: CStagePlayer( CGameProtocol *nProtocol, CTCPSocket *nSocket, CGHost *nGHost ) : m_Protocol( nProtocol ), m_Socket( nSocket ), m_GHost( nGHost ), m_Checked( false ), m_DeleteMe( false ), m_ConnectionTicks( GetTicks( ) ), m_LoadingStage( 0 ), m_LastStageTicks( GetTicks( ) ), m_MapOK( false ), m_LastPingTime( GetTime( ) ), m_Score( -10000.0 ), m_JoinTicks( 0 ), m_SpoofSent( false ), m_ScoreRange( 100.0 ), m_LastScoreRangeIncrease( GetTime( ) ), m_ScoreCheck( NULL ), m_MuteTicks( 0 ), m_VirtualPID( 1 ), m_ChatPID( 2 )
 {
 	if( nSocket )
 		m_CachedIP = nSocket->GetIPString( );
@@ -193,27 +193,6 @@ bool CStagePlayer :: Update( void *fd )
 		m_ScoreCheck = NULL;
 	}
 	
-	// process ent connect check
-	
-	if( m_ConnectCheck && m_ConnectCheck->GetReady( ) )
-	{
-		if( m_ConnectCheck->GetResult( ) )
-		{
-			m_Checked = true;
-			CONSOLE_Print( "[STAGE " + GetExternalIPString( ) + "/" + m_Name + "@" + m_Realm + "] Authentication successful" );
-			SendChat( "[System] EC client check successful!" );
-		}
-		else
-		{
-			CONSOLE_Print( "[STAGE " + GetExternalIPString( ) + "/" + m_Name + "@" + m_Realm + "] Terminating: EC check failure" );
-			m_DeleteMe = true;
-		}
-
-		m_GHost->m_DB->RecoverCallable( m_ConnectCheck );
-		delete m_ConnectCheck;
-		m_ConnectCheck= NULL;
-	}
-	
 	// unmute players
 	
 	if( m_MuteTicks != 0 && GetTicks( ) - m_MuteTicks > 15000 )
@@ -362,19 +341,11 @@ void CStagePlayer :: ProcessPackets( )
 						m_JoinTicks = GetTicks( );
 						uint32_t HostCounterID = IncomingPlayer->GetHostCounter( ) >> 28;
 					
-						if( HostCounterID == 15 )
+						
+						for( vector<CBNET *> :: iterator i = m_GHost->m_BNETs.begin( ); i != m_GHost->m_BNETs.end( ); ++i )
 						{
-							m_Realm = "entconnect";
-							m_ConnectCheck = m_GHost->m_DB->ThreadedConnectCheck( IncomingPlayer->GetName( ), IncomingPlayer->GetEntryKey( ) );
-							m_SpoofSent = true;
-						}
-						else
-						{
-							for( vector<CBNET *> :: iterator i = m_GHost->m_BNETs.begin( ); i != m_GHost->m_BNETs.end( ); ++i )
-							{
-								if( (*i)->GetHostCounterID( ) == HostCounterID )
-									m_Realm = (*i)->GetServer( );
-							}
+							if( (*i)->GetHostCounterID( ) == HostCounterID )
+								m_Realm = (*i)->GetServer( );
 						}
 					
 						if( !m_DeleteMe )

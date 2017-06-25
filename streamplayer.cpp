@@ -42,7 +42,7 @@
 // CStreamPlayer
 //
 
-CStreamPlayer :: CStreamPlayer( CGameProtocol *nProtocol, CTCPSocket *nSocket, CGHost *nGHost ) : m_Protocol( nProtocol ), m_Game( NULL ), m_Socket( nSocket ), m_GHost( nGHost ), m_ConnectCheck( NULL ), m_Checked( false ), m_DeleteMe( false ), m_ConnectionTicks( GetTicks( ) ), m_StreamPosition( 0 ), m_ActionsIndex( 0 ), m_LoadingStage( 0 ), m_LastStageTicks( GetTicks( ) ), m_MapOK( false ), m_FinishedLoading( false ), m_LastPingTime( GetTime( ) ), m_BeganStreaming( false ), m_FakeStartTicks( 0 )
+CStreamPlayer :: CStreamPlayer( CGameProtocol *nProtocol, CTCPSocket *nSocket, CGHost *nGHost ) : m_Protocol( nProtocol ), m_Game( NULL ), m_Socket( nSocket ), m_GHost( nGHost ), m_Checked( false ), m_DeleteMe( false ), m_ConnectionTicks( GetTicks( ) ), m_StreamPosition( 0 ), m_ActionsIndex( 0 ), m_LoadingStage( 0 ), m_LastStageTicks( GetTicks( ) ), m_MapOK( false ), m_FinishedLoading( false ), m_LastPingTime( GetTime( ) ), m_BeganStreaming( false ), m_FakeStartTicks( 0 )
 {
 	if( nSocket )
 		m_CachedIP = nSocket->GetIPString( );
@@ -246,26 +246,6 @@ bool CStreamPlayer :: Update( void *fd )
 	ExtractPackets( );
 	ProcessPackets( );
 	
-	if( m_ConnectCheck && m_ConnectCheck->GetReady( ) )
-	{
-		bool Check = m_ConnectCheck->GetResult( );
-
-		if( Check )
-		{
-			m_Checked = true;
-			CONSOLE_Print( "[STREAM " + GetExternalIPString( ) + "/" + m_Name + "] Authentication successful" );
-		}
-		else
-		{
-			m_DeleteMe = true;
-        	m_GHost->DenyIP( GetExternalIPString( ), 60000, "failed connect check" );
-		}
-
-		m_GHost->m_DB->RecoverCallable( m_ConnectCheck );
-		delete m_ConnectCheck;
-		m_ConnectCheck= NULL;
-	}
-	
 	// make sure we don't keep this socket open forever (disconnect after five seconds)
 	if( !m_Game && GetTicks( ) - m_ConnectionTicks > 5000 )
 	{
@@ -364,7 +344,7 @@ void CStreamPlayer :: ProcessPackets( )
 
 				if( IncomingPlayer )
 				{
-					m_ConnectCheck = m_GHost->m_DB->ThreadedConnectCheck( IncomingPlayer->GetName( ), IncomingPlayer->GetEntryKey( ) );
+					//m_ConnectCheck = m_GHost->m_DB->ThreadedConnectCheck( IncomingPlayer->GetName( ), IncomingPlayer->GetEntryKey( ) );
 					m_Name = IncomingPlayer->GetName( );
 					
 					CONSOLE_Print( "[STREAM " + GetExternalIPString( ) + "] Attempting to authenticate as [" + m_Name + "]" );

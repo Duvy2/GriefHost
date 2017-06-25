@@ -47,9 +47,6 @@ class CIncomingAction;
 class CIncomingChatPlayer;
 class CIncomingMapSize;
 class CCallableScoreCheck;
-class CCallableConnectCheck;
-class CCallableStreamGameUpdate;
-class CCallableStreamPlayerUpdate;
 struct QueuedSpoofAdd;
 struct FakePlayer;
 class CStreamPacket;
@@ -75,7 +72,6 @@ protected:
 	CGameProtocol *m_Protocol;						// game protocol
 	vector<CPotentialPlayer *> m_Potentials;		// vector of potential players (connections that haven't sent a W3GS_REQJOIN packet yet)
 	vector<CCallableScoreCheck *> m_ScoreChecks;
-	vector<CCallableConnectCheck *> m_ConnectChecks;	// session validation for entconnect system
 	queue<CIncomingAction *> m_Actions;				// queue of actions to be sent
 	vector<string> m_Reserved;						// vector of player names with reserved slots (from the !hold command)
 	set<string> m_IgnoredNames;						// set of player names to NOT print ban messages for when joining because they've already been printed
@@ -169,7 +165,6 @@ protected:
 	uint32_t m_StreamMapNumPlayers;					// cached map num players
 	BYTEARRAY m_CachedMapCheck;						// cached map check packet
 	uint32_t m_CachedMapSize;
-	uint32_t m_LastStreamDBUpdateTime;				// last time we updated database stream tables
 
 public:
 	vector<string> m_DoSayGames;					// vector of strings we should announce to the current game

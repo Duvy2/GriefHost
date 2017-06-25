@@ -46,8 +46,6 @@ class CCallableCommandList;
 class CCallableAnnounceList;
 class CCallableGameAdd;
 class CCallableGameUpdate;
-class CCallableStreamGameUpdate;
-class CCallableStreamPlayerUpdate;
 class CCallableGamePlayerAdd;
 class CCallableGamePlayerSummaryCheck;
 class CCallableDotAGameAdd;
@@ -63,7 +61,6 @@ class CCallableW3MMDPlayerSummaryCheck;
 class CCallableDownloadAdd;
 class CCallableScoreCheck;
 class CCallableAdminCommand;
-class CCallableConnectCheck;
 class CCallableW3MMDPlayerAdd;
 class CCallableW3MMDVarAdd;
 class CCallableVerifyUser;
@@ -142,8 +139,6 @@ public:
     virtual vector<string> AnnounceList(  );
 	virtual uint32_t GameAdd( string server, string map, string gamename, string ownername, uint32_t duration, uint32_t gamestate, string creatorname, string creatorserver, string savetype, vector<ChatEvent> lobbylog, vector<ChatEvent> gamelog );
 	virtual uint32_t GameUpdate( uint32_t id, string map, string gamename, string ownername, string creatorname, uint32_t players, string usernames, uint32_t slotsTotal, uint32_t totalPlayers, bool lobby, bool add );
-	virtual void StreamGameUpdate( string gamename, string map, uint32_t mapcrc, uint32_t mapflags, uint32_t port );
-	virtual void StreamPlayerUpdate( string name, string gamename );
 	virtual uint32_t GamePlayerAdd( uint32_t gameid, string name, string ip, uint32_t spoofed, string spoofedrealm, uint32_t reserved, uint32_t loadingtime, uint32_t left, string leftreason, uint32_t team, uint32_t colour, string savetype );
 	virtual uint32_t GamePlayerCount( string name );
 	virtual CDBGamePlayerSummary *GamePlayerSummaryCheck( string name, string realm );
@@ -166,7 +161,7 @@ public:
 	virtual bool W3MMDVarAdd( uint32_t gameid, map<VarP,double> var_reals, string saveType );
 	virtual bool W3MMDVarAdd( uint32_t gameid, map<VarP,string> var_strings, string saveType );
 	virtual uint32_t VerifyUser(string name, string token, string realm);
-    virtual bool BotStatusUpdate(map<string, uint32_t> bnetStatus);
+    virtual uint32_t BotStatusUpdate(map<string, uint32_t> bnetStatus);
 
 	// threaded database functions
 
@@ -185,10 +180,8 @@ public:
 	virtual CCallableSpoofList *ThreadedSpoofList( );
 	virtual CCallableCommandList *ThreadedCommandList( );
     virtual CCallableAnnounceList *ThreadedAnnounceList( );
-	virtual CCallableGameAdd *ThreadedGameAdd( string server, string map, string gamename, string ownername, uint32_t duration, uint32_t gamestate, string creatorname, string creatorserver, string savetype, vector<ChatEvent> lobbylog, vector<ChatEvent> gamelog );
+	virtual CCallableGameAdd *ThreadedGameAdd( string server, string map, string gamename, string ownername, uint32_t duration, uint32_t gamestate, string creatorname, string creatorserver, string maptype, vector<ChatEvent> lobbylog, vector<ChatEvent> gamelog );
 	virtual CCallableGameUpdate *ThreadedGameUpdate( uint32_t id, string map, string gamename, string ownername, string creatorname, uint32_t players, string usernames, uint32_t slotsTotal, uint32_t totalPlayers, bool lobby, bool add );
-	virtual CCallableStreamGameUpdate *ThreadedStreamGameUpdate( string gamename, string map, uint32_t mapcrc, uint32_t mapflags, uint32_t port );
-	virtual CCallableStreamPlayerUpdate *ThreadedStreamPlayerUpdate( string name, string gamename );
 	virtual CCallableGamePlayerAdd *ThreadedGamePlayerAdd( uint32_t gameid, string name, string ip, uint32_t spoofed, string spoofedrealm, uint32_t reserved, uint32_t loadingtime, uint32_t left, string leftreason, uint32_t team, uint32_t colour, string savetype );
 	virtual CCallableGamePlayerSummaryCheck *ThreadedGamePlayerSummaryCheck( string name, string realm );
 	virtual CCallableVampPlayerSummaryCheck *ThreadedVampPlayerSummaryCheck( string name );
@@ -204,7 +197,6 @@ public:
 	virtual CCallableDownloadAdd *ThreadedDownloadAdd( string map, uint32_t mapsize, string name, string ip, uint32_t spoofed, string spoofedrealm, uint32_t downloadtime );
 	virtual CCallableScoreCheck *ThreadedScoreCheck( string category, string name, string server );
 	virtual CCallableAdminCommand *ThreadedAdminCommand( string admin, string command, string description, string gamename );
-	virtual CCallableConnectCheck *ThreadedConnectCheck( string name, uint32_t sessionkey );
 	virtual CCallableW3MMDPlayerAdd *ThreadedW3MMDPlayerAdd( string category, uint32_t gameid, uint32_t pid, string name, string flag, uint32_t leaver, uint32_t practicing, string saveType );
 	virtual CCallableW3MMDVarAdd *ThreadedW3MMDVarAdd( uint32_t gameid, map<VarP,int32_t> var_ints, string saveType );
 	virtual CCallableW3MMDVarAdd *ThreadedW3MMDVarAdd( uint32_t gameid, map<VarP,double> var_reals, string saveType );
@@ -490,13 +482,13 @@ protected:
 	uint32_t m_GameState;
 	string m_CreatorName;
 	string m_CreatorServer;
-	string m_SaveType;
+	string m_MapType;
 	vector<ChatEvent> m_LobbyLog;
 	vector<ChatEvent> m_GameLog;
 	uint32_t m_Result;
 
 public:
-	CCallableGameAdd( string nServer, string nMap, string nGameName, string nOwnerName, uint32_t nDuration, uint32_t nGameState, string nCreatorName, string nCreatorServer, string nSaveType, vector<ChatEvent> nLobbyLog, vector<ChatEvent> nGameLog ) : CBaseCallable( ), m_Server( nServer ), m_Map( nMap ), m_GameName( nGameName ), m_OwnerName( nOwnerName ), m_Duration( nDuration ), m_GameState( nGameState ), m_CreatorName( nCreatorName ), m_CreatorServer( nCreatorServer ), m_SaveType( nSaveType ), m_LobbyLog(nLobbyLog), m_GameLog(nGameLog), m_Result( 0 ) { }
+	CCallableGameAdd( string nServer, string nMap, string nGameName, string nOwnerName, uint32_t nDuration, uint32_t nGameState, string nCreatorName, string nCreatorServer, string nMapType, vector<ChatEvent> nLobbyLog, vector<ChatEvent> nGameLog ) : CBaseCallable( ), m_Server( nServer ), m_Map( nMap ), m_GameName( nGameName ), m_OwnerName( nOwnerName ), m_Duration( nDuration ), m_GameState( nGameState ), m_CreatorName( nCreatorName ), m_CreatorServer( nCreatorServer ), m_MapType( nMapType ), m_LobbyLog(nLobbyLog), m_GameLog(nGameLog), m_Result( 0 ) { }
 	virtual ~CCallableGameAdd( );
 
 	virtual uint32_t GetResult( )				{ return m_Result; }
@@ -525,31 +517,6 @@ public:
 
 	virtual uint32_t GetResult( )				{ return m_Result; }
 	virtual void SetResult( uint32_t nResult )	{ m_Result = nResult; }
-};
-
-class CCallableStreamGameUpdate : virtual public CBaseCallable
-{
-protected:
-    string m_GameName;
-    string m_Map;
-    uint32_t m_MapCRC;
-    uint32_t m_MapFlags;
-    uint32_t m_Port;
-    
-public:
-	CCallableStreamGameUpdate( string gamename, string map, uint32_t mapcrc, uint32_t mapflags, uint32_t port ) : CBaseCallable( ), m_GameName( gamename ), m_Map( map ), m_MapCRC( mapcrc ), m_MapFlags( mapflags ), m_Port( port ) { }
-	virtual ~CCallableStreamGameUpdate( );
-};
-
-class CCallableStreamPlayerUpdate : virtual public CBaseCallable
-{
-protected:
-	string m_Name;
-    string m_GameName;
-  
-public:
-	CCallableStreamPlayerUpdate( string name, string gamename ) : CBaseCallable( ), m_Name( name ), m_GameName(gamename) { }
-	virtual ~CCallableStreamPlayerUpdate( );
 };
 
 class CCallableGamePlayerAdd : virtual public CBaseCallable
@@ -852,22 +819,6 @@ protected:
 public:
 	CCallableAdminCommand( string nAdmin, string nCommand, string nDescription, string nGameName ) : CBaseCallable( ), m_Admin( nAdmin ), m_Command( nCommand ), m_Description( nDescription ), m_GameName( nGameName ) { }
 	virtual ~CCallableAdminCommand( );
-};
-
-class CCallableConnectCheck : virtual public CBaseCallable
-{
-protected:
-	string m_Name;
-	uint32_t m_SessionKey;
-	bool m_Result;
-
-public:
-	CCallableConnectCheck( string nName, uint32_t nSessionKey ) : CBaseCallable( ), m_Name( nName ), m_SessionKey( nSessionKey ), m_Result( false ) { }
-	virtual ~CCallableConnectCheck( );
-
-	virtual string GetName( )					{ return m_Name; }
-	virtual bool GetResult( )					{ return m_Result; }
-	virtual void SetResult( bool nResult )		{ m_Result = nResult; }
 };
 
 class CCallableW3MMDPlayerAdd : virtual public CBaseCallable

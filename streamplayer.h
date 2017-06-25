@@ -30,7 +30,6 @@ class CTCPSocket;
 class CCommandPacket;
 class CGameProtocol;
 class CGame;
-class CCallableConnectCheck;
 
 //
 // CStreamPlayer
@@ -56,7 +55,6 @@ protected:
 	string m_Name;								// forum username
 	
 	string m_CachedIP;
-	CCallableConnectCheck *m_ConnectCheck;		// used to validate the stream player
 	bool m_Checked;
 	bool m_MapOK;								// player confirmed has the map
 	bool m_DeleteMe;

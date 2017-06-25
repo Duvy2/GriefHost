@@ -144,17 +144,6 @@ uint32_t CGHostDB :: GameUpdate( uint32_t id, string map, string gamename, strin
 	return 0;
 }
 
-
-void CGHostDB :: StreamGameUpdate( string gamename, string map, uint32_t mapcrc, uint32_t mapflags, uint32_t port )
-{
-
-}
-
-void CGHostDB :: StreamPlayerUpdate( string name, string gamename )
-{
-
-}
-
 uint32_t CGHostDB :: GamePlayerAdd( uint32_t gameid, string name, string ip, uint32_t spoofed, string spoofedrealm, uint32_t reserved, uint32_t loadingtime, uint32_t left, string leftreason, uint32_t team, uint32_t colour, string savetype )
 {
 	return 0;
@@ -345,22 +334,12 @@ CCallableAnnounceList *CGHostDB :: ThreadedAnnounceList( )
     return NULL;
 }
 
-CCallableGameAdd *CGHostDB :: ThreadedGameAdd( string server, string map, string gamename, string ownername, uint32_t duration, uint32_t gamestate, string creatorname, string creatorserver, string savetype, vector<ChatEvent> lobbylog, vector<ChatEvent> gamelog )
+CCallableGameAdd *CGHostDB :: ThreadedGameAdd( string server, string map, string gamename, string ownername, uint32_t duration, uint32_t gamestate, string creatorname, string creatorserver, string maptype, vector<ChatEvent> lobbylog, vector<ChatEvent> gamelog )
 {
 	return NULL;
 }
 
 CCallableGameUpdate *CGHostDB :: ThreadedGameUpdate( uint32_t id, string map, string gamename, string ownername, string creatorname, uint32_t players, string usernames, uint32_t slotsTotal, uint32_t totalPlayers, bool lobby, bool add )
-{
-	return NULL;
-}
-
-CCallableStreamGameUpdate *CGHostDB :: ThreadedStreamGameUpdate( string gamename, string map, uint32_t mapcrc, uint32_t mapflags, uint32_t port )
-{
-	return NULL;
-}
-
-CCallableStreamPlayerUpdate *CGHostDB :: ThreadedStreamPlayerUpdate( string name, string gamename )
 {
 	return NULL;
 }
@@ -436,11 +415,6 @@ CCallableScoreCheck *CGHostDB :: ThreadedScoreCheck( string category, string nam
 }
 
 CCallableAdminCommand *CGHostDB :: ThreadedAdminCommand( string admin, string command, string description, string gamename )
-{
-	return NULL;
-}
-
-CCallableConnectCheck *CGHostDB :: ThreadedConnectCheck( string name, uint32_t sessionkey )
 {
 	return NULL;
 }
@@ -566,16 +540,6 @@ CCallableGameUpdate :: ~CCallableGameUpdate( )
 
 }
 
-CCallableStreamGameUpdate :: ~CCallableStreamGameUpdate( )
-{
-
-}
-
-CCallableStreamPlayerUpdate :: ~CCallableStreamPlayerUpdate( )
-{
-
-}
-
 CCallableGamePlayerAdd :: ~CCallableGamePlayerAdd( )
 {
 
@@ -647,11 +611,6 @@ CCallableScoreCheck :: ~CCallableScoreCheck( )
 }
 
 CCallableAdminCommand :: ~CCallableAdminCommand( )
-{
-
-}
-
-CCallableConnectCheck :: ~CCallableConnectCheck( )
 {
 
 }

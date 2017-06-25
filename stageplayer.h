@@ -30,7 +30,6 @@ class CTCPSocket;
 class CCommandPacket;
 class CGameProtocol;
 class CGame;
-class CCallableConnectCheck;
 class CCallableScoreCheck;
 
 //
@@ -65,7 +64,6 @@ protected:
 	uint32_t m_MuteTicks;						// ticks when this player was muted, or 0 if not muted
 	
 	string m_CachedIP;
-	CCallableConnectCheck *m_ConnectCheck;				// used to validate the stream player
 	CCallableScoreCheck *m_ScoreCheck;			// used to determine player score
 	bool m_Checked;
 	bool m_MapOK;								// player confirmed has the map

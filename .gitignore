@@ -12,3 +12,5 @@ ghost.vcproj
 ghost.vcxproj
 ghost.vcxproj.filters
 ghost.rc
+replays/
+w3files/

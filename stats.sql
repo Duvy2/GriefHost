@@ -55,53 +55,6 @@ CREATE TABLE `gametrack` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `league_games`
---
-
-CREATE TABLE `league_games` (
-  `id` int(11) NOT NULL,
-  `gameid` int(11) NOT NULL,
-  `p1` float NOT NULL,
-  `p2` float NOT NULL,
-  `p3` float NOT NULL,
-  `p4` float NOT NULL,
-  `p5` float NOT NULL,
-  `p6` float NOT NULL,
-  `p7` float NOT NULL,
-  `p8` float NOT NULL,
-  `p9` float NOT NULL,
-  `p10` float NOT NULL,
-  `sentWin` float NOT NULL,
-  `scouWin` float NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `league_players`
---
-
-CREATE TABLE `league_players` (
-  `id` bigint(20) UNSIGNED NOT NULL COMMENT 'ID Number',
-  `name` varchar(25) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `server` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `score` double NOT NULL DEFAULT '1000',
-  `g` int(11) NOT NULL DEFAULT '0',
-  `d` int(11) NOT NULL DEFAULT '0',
-  `a` int(11) NOT NULL DEFAULT '0',
-  `k` int(11) NOT NULL DEFAULT '0',
-  `w` int(11) NOT NULL DEFAULT '0',
-  `l` int(11) NOT NULL DEFAULT '0',
-  `ck` int(11) NOT NULL DEFAULT '0',
-  `cd` int(11) NOT NULL DEFAULT '0',
-  `nk` int(11) NOT NULL DEFAULT '0',
-  `tk` int(11) NOT NULL DEFAULT '0',
-  `rk` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Tabellenstruktur für Tabelle `stats_admins`
 --
 
@@ -204,73 +157,10 @@ CREATE TABLE `stats_dotagames` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `stats_dotagames_solomm`
---
-
-CREATE TABLE `stats_dotagames_solomm` (
-  `id` bigint(20) UNSIGNED NOT NULL COMMENT 'ID Number',
-  `botid` tinyint(4) NOT NULL DEFAULT '0',
-  `gameid` bigint(20) NOT NULL DEFAULT '0',
-  `winner` tinyint(4) NOT NULL DEFAULT '0',
-  `min` int(11) NOT NULL DEFAULT '0',
-  `sec` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Tabellenstruktur für Tabelle `stats_dotaplayers`
 --
 
 CREATE TABLE `stats_dotaplayers` (
-  `id` bigint(20) UNSIGNED NOT NULL COMMENT 'ID Number',
-  `botid` tinyint(4) NOT NULL DEFAULT '0',
-  `gameid` bigint(20) NOT NULL DEFAULT '0',
-  `colour` int(11) NOT NULL DEFAULT '0',
-  `kills` int(11) NOT NULL DEFAULT '0',
-  `deaths` int(11) NOT NULL DEFAULT '0',
-  `creepkills` int(11) NOT NULL DEFAULT '0',
-  `creepdenies` int(11) NOT NULL DEFAULT '0',
-  `assists` int(11) NOT NULL DEFAULT '0',
-  `gold` int(11) NOT NULL DEFAULT '0',
-  `neutralkills` int(11) NOT NULL DEFAULT '0',
-  `item1` char(4) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `item2` char(4) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `item3` char(4) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `item4` char(4) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `item5` char(4) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `item6` char(4) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `hero` char(4) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `newcolour` int(11) NOT NULL DEFAULT '0',
-  `towerkills` int(11) NOT NULL DEFAULT '0',
-  `raxkills` int(11) NOT NULL DEFAULT '0',
-  `courierkills` int(11) NOT NULL DEFAULT '0',
-  `level` int(11) NOT NULL DEFAULT '0',
-  `suicides` int(11) NOT NULL DEFAULT '0',
-  `2k` int(11) NOT NULL DEFAULT '0',
-  `3k` int(11) NOT NULL DEFAULT '0',
-  `4k` int(11) NOT NULL DEFAULT '0',
-  `5k` int(11) NOT NULL DEFAULT '0',
-  `fb` bit(1) NOT NULL DEFAULT b'0',
-  `fd` bit(1) NOT NULL DEFAULT b'0',
-  `ks` int(11) NOT NULL DEFAULT '0',
-  `d` int(11) NOT NULL DEFAULT '0',
-  `mk` int(11) NOT NULL DEFAULT '0',
-  `u` int(11) NOT NULL DEFAULT '0',
-  `ws` int(11) NOT NULL DEFAULT '0',
-  `mok` int(11) NOT NULL DEFAULT '0',
-  `g` int(11) NOT NULL DEFAULT '0',
-  `bg` int(11) NOT NULL DEFAULT '0',
-  `ms` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `stats_dotaplayers_solomm`
---
-
-CREATE TABLE `stats_dotaplayers_solomm` (
   `id` bigint(20) UNSIGNED NOT NULL COMMENT 'ID Number',
   `botid` tinyint(4) NOT NULL DEFAULT '0',
   `gameid` bigint(20) NOT NULL DEFAULT '0',
@@ -330,36 +220,6 @@ CREATE TABLE `stats_dota_elo_games_scored` (
 --
 
 CREATE TABLE `stats_dota_elo_scores` (
-  `id` bigint(20) UNSIGNED NOT NULL COMMENT 'ID Number',
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `server` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `score` decimal(10,0) NOT NULL DEFAULT '0',
-  `games` int(11) NOT NULL DEFAULT '0',
-  `wins` int(11) NOT NULL DEFAULT '0',
-  `losses` int(11) NOT NULL DEFAULT '0',
-  `kills` int(11) NOT NULL DEFAULT '0',
-  `deaths` int(11) NOT NULL DEFAULT '0',
-  `creepkills` int(11) NOT NULL DEFAULT '0',
-  `creepdenies` int(11) NOT NULL DEFAULT '0',
-  `assists` int(11) NOT NULL DEFAULT '0',
-  `neutralkills` int(11) NOT NULL DEFAULT '0',
-  `towerkills` int(11) NOT NULL DEFAULT '0',
-  `raxkills` int(11) NOT NULL DEFAULT '0',
-  `courierkills` int(11) NOT NULL DEFAULT '0',
-  `streak` int(11) NOT NULL DEFAULT '0',
-  `maxstreak` int(11) NOT NULL DEFAULT '0',
-  `lossstreak` int(11) NOT NULL DEFAULT '0',
-  `maxlossstreak` int(11) NOT NULL DEFAULT '0',
-  `zerodeaths` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `stats_dota_elo_scores_solomm`
---
-
-CREATE TABLE `stats_dota_elo_scores_solomm` (
   `id` bigint(20) UNSIGNED NOT NULL COMMENT 'ID Number',
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `server` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -457,6 +317,7 @@ CREATE TABLE `stats_games` (
   `botid` tinyint(4) NOT NULL DEFAULT '0',
   `server` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `map` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `maptype` varchar(31) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `gamename` varchar(31) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `ownername` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -781,20 +642,6 @@ ALTER TABLE `gametrack`
   ADD KEY `realm` (`realm`);
 
 --
--- Indizes für die Tabelle `league_games`
---
-ALTER TABLE `league_games`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `league_players`
---
-ALTER TABLE `league_players`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `name` (`name`),
-  ADD KEY `server` (`server`);
-
---
 -- Indizes für die Tabelle `stats_admins`
 --
 ALTER TABLE `stats_admins`
@@ -840,25 +687,9 @@ ALTER TABLE `stats_dotagames`
   ADD KEY `def` (`gameid`);
 
 --
--- Indizes für die Tabelle `stats_dotagames_solomm`
---
-ALTER TABLE `stats_dotagames_solomm`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `def` (`gameid`);
-
---
 -- Indizes für die Tabelle `stats_dotaplayers`
 --
 ALTER TABLE `stats_dotaplayers`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `dp_newcolour` (`newcolour`),
-  ADD KEY `dp_gameid` (`gameid`),
-  ADD KEY `gp_select` (`newcolour`,`gameid`);
-
---
--- Indizes für die Tabelle `stats_dotaplayers_solomm`
---
-ALTER TABLE `stats_dotaplayers_solomm`
   ADD PRIMARY KEY (`id`),
   ADD KEY `dp_newcolour` (`newcolour`),
   ADD KEY `dp_gameid` (`gameid`),
@@ -875,13 +706,6 @@ ALTER TABLE `stats_dota_elo_games_scored`
 -- Indizes für die Tabelle `stats_dota_elo_scores`
 --
 ALTER TABLE `stats_dota_elo_scores`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `def` (`name`(191));
-
---
--- Indizes für die Tabelle `stats_dota_elo_scores_solomm`
---
-ALTER TABLE `stats_dota_elo_scores_solomm`
   ADD PRIMARY KEY (`id`),
   ADD KEY `def` (`name`(191));
 
@@ -1029,16 +853,6 @@ ALTER TABLE `stats_whitelist`
 ALTER TABLE `admin_actions`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID Number', AUTO_INCREMENT=1;
 --
--- AUTO_INCREMENT für Tabelle `league_games`
---
-ALTER TABLE `league_games`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
---
--- AUTO_INCREMENT für Tabelle `league_players`
---
-ALTER TABLE `league_players`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID Number', AUTO_INCREMENT=1;
---
 -- AUTO_INCREMENT für Tabelle `stats_admins`
 --
 ALTER TABLE `stats_admins`
@@ -1069,19 +883,9 @@ ALTER TABLE `stats_commands`
 ALTER TABLE `stats_dotagames`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID Number', AUTO_INCREMENT=1;
 --
--- AUTO_INCREMENT für Tabelle `stats_dotagames_solomm`
---
-ALTER TABLE `stats_dotagames_solomm`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID Number', AUTO_INCREMENT=1;
---
 -- AUTO_INCREMENT für Tabelle `stats_dotaplayers`
 --
 ALTER TABLE `stats_dotaplayers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID Number', AUTO_INCREMENT=1;
---
--- AUTO_INCREMENT für Tabelle `stats_dotaplayers_solomm`
---
-ALTER TABLE `stats_dotaplayers_solomm`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID Number', AUTO_INCREMENT=1;
 --
 -- AUTO_INCREMENT für Tabelle `stats_dota_elo_games_scored`
@@ -1093,11 +897,6 @@ ALTER TABLE `stats_dota_elo_games_scored`
 --
 ALTER TABLE `stats_dota_elo_scores`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID Number', AUTO_INCREMENT=1;
---
--- AUTO_INCREMENT für Tabelle `stats_dota_elo_scores_solomm`
---
-ALTER TABLE `stats_dota_elo_scores_solomm`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID Number';
 --
 -- AUTO_INCREMENT für Tabelle `stats_forum_connections`
 --
